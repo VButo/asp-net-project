@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command '$logPath = ''C:\\Users\\Home\\Projects\\API-tester\\.github\\hooks\\copilot_chat_log.txt''; New-Item -ItemType Directory -Force -Path (Split-Path $logPath) | Out-Null; $payload = [Console]::In.ReadToEnd(); Add-Content -Path $logPath -Value (''[{0}] UserPromptSubmit {1}'' -f (Get-Date -Format o), $payload)'"
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command '$logPath = ''C:\\Users\\Home\\Projects\\API-tester\\.github\\hooks\\copilot_chat_log.txt''; New-Item -ItemType Directory -Force -Path (Split-Path $logPath) | Out-Null; $payload = [Console]::In.ReadToEnd(); Add-Content -Path $logPath -Value (''[{0}] preToolUse {1}'' -f (Get-Date -Format o), $payload)'"
+      }
+    ]
+  }
+}
