@@ -34,21 +34,25 @@
         <p>Total Workspaceova</p>
         <h2>07</h2>
         <span>+2 ovaj tjedan</span>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Privacy">Open Workspaces</a>
     </article>
     <article class="stat-card">
         <p>Aktivne Collectione</p>
         <h2>19</h2>
         <span>132 requesta mapirano</span>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Collections">Open Collections</a>
     </article>
     <article class="stat-card">
         <p>Ukupno Requestova</p>
         <h2>246</h2>
         <span>Last run: prije 2 min</span>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Requests">Open Requests</a>
     </article>
     <article class="stat-card">
         <p>Aktivni Environment</p>
         <h2>staging-eu</h2>
         <span>token validan jos 41 min</span>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Environments">Open Environments</a>
     </article>
 </section>
 
@@ -89,14 +93,17 @@
             <li>
                 <strong>Payments Core</strong>
                 <span>6 collectiona · 48 requestova</span>
+                <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
             </li>
             <li>
                 <strong>Identity Gateway</strong>
                 <span>4 collectiona · 32 requesta</span>
+                <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
             </li>
             <li>
                 <strong>Billing Public API</strong>
                 <span>3 collectiona · 27 requestova</span>
+                <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
             </li>
         </ul>
     </article>
@@ -107,10 +114,10 @@
             <a asp-area="" asp-controller="Home" asp-action="Collections">Open catalog</a>
         </div>
         <ul class="panel-list mono">
-            <li><strong>Auth / Sessions</strong><span>GET, POST, DELETE</span></li>
-            <li><strong>Transactions</strong><span>POST, PATCH, GET</span></li>
-            <li><strong>Webhooks</strong><span>POST test payloads</span></li>
-            <li><strong>Health Checks</strong><span>GET /ready, /live</span></li>
+            <li><strong>Auth / Sessions</strong><span>GET, POST, DELETE</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
+            <li><strong>Transactions</strong><span>POST, PATCH, GET</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
+            <li><strong>Webhooks</strong><span>POST test payloads</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
+            <li><strong>Health Checks</strong><span>GET /ready, /live</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
         </ul>
     </article>
 
@@ -138,5 +145,6 @@
             <p><span>Variables</span><strong>14 loaded</strong></p>
             <p><span>Secrets</span><strong>3 secured</strong></p>
         </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Environments">Environment Details</a>
     </article>
 </section>

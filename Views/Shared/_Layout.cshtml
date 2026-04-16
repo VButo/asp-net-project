@@ -18,17 +18,14 @@
                 <span class="app-brand-text">API Tester</span>
             </a>
 
-            <button class="navbar-toggler app-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#appMenu" aria-controls="appMenu"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse app-menu" id="appMenu">
+            <div class="app-menu" id="appMenu">
                 <ul class="app-links">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Workspaces</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Collections">Collections</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Requests">Requests</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Request Builder</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Environments">Environments</a></li>
                 </ul>
                 <div class="app-nav-actions">
                     <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="Environments">Import</a>
