@@ -1,0 +1,118 @@
+@{
+    ViewData["Title"] = "Collections";
+}
+
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="Privacy">Workspaces</a>
+    <span>/</span>
+    <strong>Collections</strong>
+</nav>
+
+<section class="collections-hero">
+    <div class="collections-hero-copy">
+        <p class="collections-kicker">Collection Catalog</p>
+        <h1>Organiziraj endpoint flowove kroz pregledne API collectione.</h1>
+        <p>
+            Centralni pregled collectiona za sve timove. Svaka kartica pokazuje naziv, opis, workspace kojem pripada i broj requestova.
+        </p>
+    </div>
+    <div class="collections-hero-actions">
+        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="CollectionDetails">+ New Collection</a>
+        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="Requests">Import Collection</a>
+    </div>
+</section>
+
+<section class="collections-toolbar" aria-label="Collection filters">
+    <div class="collection-search">
+        <label for="collectionSearch">Pretraga</label>
+        <input id="collectionSearch" type="text" value="" placeholder="Search by collection name, workspace or domain" />
+    </div>
+    <div class="collection-filter-group">
+        <button class="filter-chip active" type="button">All</button>
+        <button class="filter-chip" type="button">Core APIs</button>
+        <button class="filter-chip" type="button">Public APIs</button>
+        <button class="filter-chip" type="button">Sandbox</button>
+    </div>
+</section>
+
+<section class="collections-grid" aria-label="Collections list">
+    <article class="collection-card">
+        <div class="collection-head">
+            <h2>Payments Authorization</h2>
+            <span class="collection-badge">Core</span>
+        </div>
+        <p class="collection-description">Authorize, capture i refund scenariji za karticna placanja, ukljucujuci fallback i timeout varijante.</p>
+        <div class="collection-meta">
+            <p><span>Workspace</span><strong>Payments Core</strong></p>
+            <p><span>Requests</span><strong>18</strong></p>
+        </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Open Collection Details</a>
+    </article>
+
+    <article class="collection-card">
+        <div class="collection-head">
+            <h2>Identity Session Flow</h2>
+            <span class="collection-badge">Security</span>
+        </div>
+        <p class="collection-description">Login, refresh token i session revoke requestovi za web, mobile i internal admin klijente.</p>
+        <div class="collection-meta">
+            <p><span>Workspace</span><strong>Identity Gateway</strong></p>
+            <p><span>Requests</span><strong>14</strong></p>
+        </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Open Collection Details</a>
+    </article>
+
+    <article class="collection-card">
+        <div class="collection-head">
+            <h2>Orders Partner API</h2>
+            <span class="collection-badge">Public</span>
+        </div>
+        <p class="collection-description">Create, update i status endpointovi za partnere, s conflict handling i retry test putanjama.</p>
+        <div class="collection-meta">
+            <p><span>Workspace</span><strong>Orders Public API</strong></p>
+            <p><span>Requests</span><strong>21</strong></p>
+        </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Open Collection Details</a>
+    </article>
+
+    <article class="collection-card">
+        <div class="collection-head">
+            <h2>Notification Dispatch</h2>
+            <span class="collection-badge">Messaging</span>
+        </div>
+        <p class="collection-description">Email, SMS i push payload varijante sa status callback validacijom i retry granama.</p>
+        <div class="collection-meta">
+            <p><span>Workspace</span><strong>Notifications Hub</strong></p>
+            <p><span>Requests</span><strong>16</strong></p>
+        </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Open Collection Details</a>
+    </article>
+
+    <article class="collection-card">
+        <div class="collection-head">
+            <h2>Fraud Rules and Scoring</h2>
+            <span class="collection-badge">Risk</span>
+        </div>
+        <p class="collection-description">Risk scoring, velocity check i denylist endpointovi za detekciju sumnjivih transakcija.</p>
+        <div class="collection-meta">
+            <p><span>Workspace</span><strong>Fraud Engine</strong></p>
+            <p><span>Requests</span><strong>27</strong></p>
+        </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Open Collection Details</a>
+    </article>
+
+    <article class="collection-card">
+        <div class="collection-head">
+            <h2>Sandbox Smoke Set</h2>
+            <span class="collection-badge">Lab</span>
+        </div>
+        <p class="collection-description">Minimalni smoke requestovi za health endpointove i brzu validaciju payload shema prije mergea.</p>
+        <div class="collection-meta">
+            <p><span>Workspace</span><strong>Developer Sandbox</strong></p>
+            <p><span>Requests</span><strong>9</strong></p>
+        </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Open Collection Details</a>
+    </article>
+</section>

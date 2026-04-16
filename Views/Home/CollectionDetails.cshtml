@@ -1,0 +1,74 @@
+@{
+    ViewData["Title"] = "Collection Details";
+}
+
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="Privacy">Workspaces</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="Collections">Collections</a>
+    <span>/</span>
+    <strong>Collection Details</strong>
+</nav>
+
+<section class="details-hero">
+    <div>
+        <p class="details-kicker">Collection Details</p>
+        <h1>Payments Authorization</h1>
+        <p>Collection za authorize, capture i refund tokove sa svim edge-case response scenarijima.</p>
+    </div>
+    <div class="details-hero-actions">
+        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="Requests">Open Requests</a>
+        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Back to Workspace</a>
+    </div>
+</section>
+
+<section class="detail-panel">
+    <div class="panel-title-row">
+        <h3>Requestovi u ovoj collectioni</h3>
+        <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Open Builder</a>
+    </div>
+    <div class="requests-stream">
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge post">POST</span>
+                <div class="request-details">
+                    <p class="request-url">/v1/payments/authorize</p>
+                    <p class="request-collection">Collection: Payments Authorization</p>
+                    <div class="request-tags"><span>critical</span><span>pci</span></div>
+                </div>
+            </div>
+            <p class="request-last-run ok">200 OK · 143 ms</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge post">POST</span>
+                <div class="request-details">
+                    <p class="request-url">/v1/payments/capture</p>
+                    <p class="request-collection">Collection: Payments Authorization</p>
+                    <div class="request-tags"><span>capture</span><span>checkout</span></div>
+                </div>
+            </div>
+            <p class="request-last-run ok">201 Created · 166 ms</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge post">POST</span>
+                <div class="request-details">
+                    <p class="request-url">/v1/payments/refund</p>
+                    <p class="request-collection">Collection: Payments Authorization</p>
+                    <div class="request-tags"><span>refund</span><span>manual-review</span></div>
+                </div>
+            </div>
+            <p class="request-last-run warn">409 Conflict · 302 ms</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+    </div>
+</section>

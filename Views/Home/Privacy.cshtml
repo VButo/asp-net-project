@@ -2,6 +2,12 @@
     ViewData["Title"] = "Workspaces";
 }
 
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <strong>Workspaces</strong>
+</nav>
+
 <section class="workspaces-hero">
     <div class="workspaces-hero-copy">
         <p class="workspaces-kicker">Workspace Registry</p>
@@ -11,8 +17,8 @@
         </p>
     </div>
     <div class="workspaces-hero-actions">
-        <a class="btn app-btn app-btn-primary" href="#">+ Novi Workspace</a>
-        <a class="btn app-btn app-btn-muted" href="#">Import Workspace</a>
+        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">+ Novi Workspace</a>
+        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="Collections">Import Workspace</a>
     </div>
 </section>
 
@@ -40,6 +46,7 @@
             <p><span>Collectiona</span><strong>6</strong></p>
             <p><span>Environmenta</span><strong>3</strong></p>
         </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Open Workspace Details</a>
     </article>
 
     <article class="workspace-card">
@@ -52,6 +59,7 @@
             <p><span>Collectiona</span><strong>4</strong></p>
             <p><span>Environmenta</span><strong>2</strong></p>
         </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Open Workspace Details</a>
     </article>
 
     <article class="workspace-card">
@@ -64,6 +72,7 @@
             <p><span>Collectiona</span><strong>5</strong></p>
             <p><span>Environmenta</span><strong>4</strong></p>
         </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Open Workspace Details</a>
     </article>
 
     <article class="workspace-card">
@@ -76,6 +85,7 @@
             <p><span>Collectiona</span><strong>3</strong></p>
             <p><span>Environmenta</span><strong>2</strong></p>
         </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Open Workspace Details</a>
     </article>
 
     <article class="workspace-card">
@@ -88,6 +98,7 @@
             <p><span>Collectiona</span><strong>7</strong></p>
             <p><span>Environmenta</span><strong>3</strong></p>
         </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Open Workspace Details</a>
     </article>
 
     <article class="workspace-card">
@@ -100,5 +111,6 @@
             <p><span>Collectiona</span><strong>8</strong></p>
             <p><span>Environmenta</span><strong>5</strong></p>
         </div>
+        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Open Workspace Details</a>
     </article>
 </section>

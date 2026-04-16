@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Request Details";
+}
+
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="Privacy">Workspaces</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="Collections">Collections</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a>
+    <span>/</span>
+    <strong>Request Details</strong>
+</nav>
+
+<section class="details-hero">
+    <div>
+        <p class="details-kicker">Request Details</p>
+        <h1>POST /v1/payments/authorize</h1>
+        <p>Detalji request konfiguracije, status posljednjeg izvrsenja i brzi ulaz u Builder/Runner.</p>
+    </div>
+    <div class="details-hero-actions">
+        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="RequestBuilder">Open in Builder</a>
+        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Back to Collection</a>
+    </div>
+</section>
+
+<section class="details-grid">
+    <article class="detail-panel">
+        <div class="panel-title-row">
+            <h3>Request Context</h3>
+            <a asp-area="" asp-controller="Home" asp-action="Requests">All Requests</a>
+        </div>
+        <div class="env-box">
+            <p><span>Method</span><strong>POST</strong></p>
+            <p><span>URL</span><strong>/v1/payments/authorize</strong></p>
+            <p><span>Workspace</span><strong><a asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Payments Core</a></strong></p>
+            <p><span>Collection</span><strong><a asp-area="" asp-controller="Home" asp-action="CollectionDetails">Payments Authorization</a></strong></p>
+        </div>
+    </article>
+
+    <article class="detail-panel">
+        <div class="panel-title-row">
+            <h3>Last Response Snapshot</h3>
+            <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Open Response Panel</a>
+        </div>
+        <pre class="response-body">{
+  "status": "authorized",
+  "transactionId": "tx_92311",
+  "risk": "low",
+  "approvalCode": "A18Z3"
+}</pre>
+    </article>
+</section>

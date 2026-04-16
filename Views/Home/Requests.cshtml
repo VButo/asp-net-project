@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "Requests";
+}
+
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="Privacy">Workspaces</a>
+    <span>/</span>
+    <a asp-area="" asp-controller="Home" asp-action="Collections">Collections</a>
+    <span>/</span>
+    <strong>Requests</strong>
+</nav>
+
+<section class="requests-hero" aria-label="Requests overview">
+    <div class="requests-hero-copy">
+        <p class="requests-kicker">Request Matrix</p>
+        <h1>Operativni pregled svih API requestova kroz collectione i workspacove.</h1>
+        <p>
+            Fokusiran prikaz method badgeova, URL-ova, pripadnih collectiona, tagova i zadnjeg izvrsenja ili statusa svake rute.
+        </p>
+    </div>
+    <div class="requests-hero-actions">
+        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="RequestBuilder">+ New Request</a>
+        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="RequestBuilder">Run Batch</a>
+    </div>
+</section>
+
+<section class="requests-commandbar" aria-label="Request controls">
+    <div class="request-search">
+        <label for="requestSearch">Search</label>
+        <input id="requestSearch" type="text" placeholder="Search by URL, collection or tag" />
+    </div>
+    <div class="request-filter-group">
+        <button class="request-chip active" type="button">All Methods</button>
+        <button class="request-chip" type="button">Critical</button>
+        <button class="request-chip" type="button">Smoke</button>
+        <button class="request-chip" type="button">Pending</button>
+    </div>
+</section>
+
+<section class="requests-layout" aria-label="Requests list">
+    <aside class="requests-side-rail" aria-label="Request summary">
+        <p class="requests-rail-label">Live Snapshot</p>
+        <h2>246 Requests</h2>
+        <ul>
+            <li><span>Successful Last Run</span><strong>211</strong></li>
+            <li><span>Warnings</span><strong>22</strong></li>
+            <li><span>Not Executed</span><strong>13</strong></li>
+        </ul>
+        <a asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Execution Timeline</a>
+    </aside>
+
+    <div class="requests-stream">
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge post">POST</span>
+                <div class="request-details">
+                    <p class="request-url">/v1/payments/authorize</p>
+                    <p class="request-collection">Collection: Payments Authorization</p>
+                    <div class="request-tags">
+                        <span>critical</span>
+                        <span>pci</span>
+                        <span>checkout</span>
+                    </div>
+                </div>
+            </div>
+            <p class="request-last-run ok">200 OK · 143 ms · 2 min ago</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge get">GET</span>
+                <div class="request-details">
+                    <p class="request-url">/v1/sessions/{sessionId}</p>
+                    <p class="request-collection">Collection: Identity Session Flow</p>
+                    <div class="request-tags">
+                        <span>auth</span>
+                        <span>mobile</span>
+                    </div>
+                </div>
+            </div>
+            <p class="request-last-run ok">200 OK · 89 ms · 7 min ago</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge patch">PATCH</span>
+                <div class="request-details">
+                    <p class="request-url">/partner/v2/orders/{orderId}/status</p>
+                    <p class="request-collection">Collection: Orders Partner API</p>
+                    <div class="request-tags">
+                        <span>partner</span>
+                        <span>state-change</span>
+                    </div>
+                </div>
+            </div>
+            <p class="request-last-run warn">409 Conflict · 310 ms · 24 min ago</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge post">POST</span>
+                <div class="request-details">
+                    <p class="request-url">/v1/notifications/dispatch</p>
+                    <p class="request-collection">Collection: Notification Dispatch</p>
+                    <div class="request-tags">
+                        <span>webhook</span>
+                        <span>retry</span>
+                        <span>email</span>
+                    </div>
+                </div>
+            </div>
+            <p class="request-last-run ok">202 Accepted · 121 ms · 5 min ago</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge get">GET</span>
+                <div class="request-details">
+                    <p class="request-url">/risk/v1/score/{transactionId}</p>
+                    <p class="request-collection">Collection: Fraud Rules and Scoring</p>
+                    <div class="request-tags">
+                        <span>risk</span>
+                        <span>fraud</span>
+                        <span>realtime</span>
+                    </div>
+                </div>
+            </div>
+            <p class="request-last-run ok">200 OK · 97 ms · 11 min ago</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+
+        <article class="request-row">
+            <div class="request-main">
+                <span class="method-badge delete">DELETE</span>
+                <div class="request-details">
+                    <p class="request-url">/sandbox/v1/sessions/{sessionId}</p>
+                    <p class="request-collection">Collection: Sandbox Smoke Set</p>
+                    <div class="request-tags">
+                        <span>sandbox</span>
+                        <span>cleanup</span>
+                    </div>
+                </div>
+            </div>
+            <p class="request-last-run idle">Not executed yet</p>
+            <a class="entity-link" asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Request Details</a>
+        </article>
+    </div>
+</section>

@@ -26,12 +26,13 @@
             <div class="collapse navbar-collapse app-menu" id="appMenu">
                 <ul class="app-links">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Docs</a></li>
-                    <li><a href="#">History</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Workspaces</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Collections">Collections</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Requests">Requests</a></li>
                 </ul>
                 <div class="app-nav-actions">
-                    <a class="btn app-btn app-btn-muted" href="#">Import</a>
-                    <a class="btn app-btn app-btn-primary" href="#">New Request</a>
+                    <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="Environments">Import</a>
+                    <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="RequestBuilder">New Request</a>
                 </div>
             </div>
         </nav>

@@ -23,6 +23,41 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult WorkspaceDetails()
+    {
+        return View();
+    }
+
+    public IActionResult Environments()
+    {
+        return View();
+    }
+
+    public IActionResult Collections()
+    {
+        return View();
+    }
+
+    public IActionResult CollectionDetails()
+    {
+        return View();
+    }
+
+    public IActionResult Requests()
+    {
+        return View();
+    }
+
+    public IActionResult RequestDetails()
+    {
+        return View();
+    }
+
+    public IActionResult RequestBuilder()
+    {
+        return View();
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

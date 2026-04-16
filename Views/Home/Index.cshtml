@@ -10,8 +10,8 @@
             Jedinstveni dashboard za workspaceove, kolekcije, requestove i environmente. Brz pregled svega sto je bitno prije slanja iduceg requesta.
         </p>
         <div class="hero-actions">
-            <a class="btn app-btn app-btn-primary" href="#">Run Collection</a>
-            <a class="btn app-btn app-btn-muted" href="#">Open Request Builder</a>
+            <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="RequestBuilder">Open Request Builder</a>
+            <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="Requests">Browse Requests</a>
         </div>
     </div>
 
@@ -52,11 +52,38 @@
     </article>
 </section>
 
+<section class="dashboard-flow" aria-label="Main navigation flow">
+    <article class="flow-card">
+        <p class="flow-step">01</p>
+        <h3>Workspaces</h3>
+        <p>Odaberi timski kontekst i domenu API-ja koju testiras.</p>
+        <a asp-area="" asp-controller="Home" asp-action="Privacy">Open Workspaces</a>
+    </article>
+    <article class="flow-card">
+        <p class="flow-step">02</p>
+        <h3>Collections</h3>
+        <p>Pregledaj endpoint grupe i mapirane scenarije po workspaceu.</p>
+        <a asp-area="" asp-controller="Home" asp-action="Collections">Go to Collections</a>
+    </article>
+    <article class="flow-card">
+        <p class="flow-step">03</p>
+        <h3>Requests</h3>
+        <p>Filtriraj requestove po metodi, tagovima i zadnjem statusu.</p>
+        <a asp-area="" asp-controller="Home" asp-action="Requests">Open Request List</a>
+    </article>
+    <article class="flow-card">
+        <p class="flow-step">04</p>
+        <h3>Request Builder</h3>
+        <p>Sastavi payload, odaberi environment i odmah pokreni poziv.</p>
+        <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Launch Builder</a>
+    </article>
+</section>
+
 <section class="dashboard-grid">
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Workspaceovi</h3>
-            <a href="#">View all</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">View all</a>
         </div>
         <ul class="panel-list">
             <li>
@@ -77,7 +104,7 @@
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Collectione</h3>
-            <a href="#">Create new</a>
+            <a asp-area="" asp-controller="Home" asp-action="Collections">Open catalog</a>
         </div>
         <ul class="panel-list mono">
             <li><strong>Auth / Sessions</strong><span>GET, POST, DELETE</span></li>
@@ -90,20 +117,20 @@
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Brze Akcije</h3>
-            <a href="#">Shortcuts</a>
+            <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Runner</a>
         </div>
         <div class="quick-actions">
-            <a href="#">+ Novi workspace</a>
-            <a href="#">+ Novi environment</a>
-            <a href="#">+ Export collection</a>
-            <a href="#">+ Generate mock response</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">+ Open workspaces</a>
+            <a asp-area="" asp-controller="Home" asp-action="Collections">+ Open collections</a>
+            <a asp-area="" asp-controller="Home" asp-action="Requests">+ Open requests</a>
+            <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">+ New request in builder</a>
         </div>
     </article>
 
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Aktivni Environment</h3>
-            <a href="#">Switch</a>
+            <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Switch in builder</a>
         </div>
         <div class="env-box">
             <p><span>Name</span><strong>staging-eu</strong></p>
