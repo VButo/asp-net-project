@@ -31,3 +31,34 @@ C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\refint\API-tester.dll
 C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\API-tester.pdb
 C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\API-tester.genruntimeconfig.cache
 C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\ref\API-tester.dll
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\appsettings.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\API-tester.staticwebassets.runtime.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\API-tester.exe
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\API-tester.deps.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\API-tester.runtimeconfig.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\API-tester.dll
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\bin\Debug\net8.0\API-tester.pdb
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.AssemblyInfoInputs.cache
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.AssemblyInfo.cs
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.csproj.CoreCompileInputs.cache
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.RazorAssemblyInfo.cache
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.RazorAssemblyInfo.cs
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.sourcelink.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\staticwebassets\msbuild.API-tester.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\staticwebassets\msbuild.build.API-tester.props
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.API-tester.props
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.API-tester.props
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\scopedcss\bundle\API-tester.styles.css
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\scopedcss\projectbundle\API-tester.bundle.scp.css
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.dll
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\refint\API-tester.dll
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.pdb
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.genruntimeconfig.cache
+C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\ref\API-tester.dll

@@ -3,13 +3,13 @@
     "UserPromptSubmit": [
       {
         "type": "command",
-        "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command '$logPath = ''C:\\Users\\Home\\Projects\\API-tester\\.github\\hooks\\copilot_chat_log.txt''; New-Item -ItemType Directory -Force -Path (Split-Path $logPath) | Out-Null; $payload = [Console]::In.ReadToEnd(); Add-Content -Path $logPath -Value (''[{0}] UserPromptSubmit {1}'' -f (Get-Date -Format o), $payload)'"
+        "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"`$basePath = Join-Path (Get-Location) '.github/hooks'; if (!(Test-Path `$basePath)) { New-Item -ItemType Directory -Path `$basePath | Out-Null }; `$logPath = Join-Path `$basePath 'copilot_chat_log.txt'; `$payload = ''; try { `$payload = [Console]::In.ReadToEnd() } catch { `$payload = '' }; if ([string]::IsNullOrWhiteSpace(`$payload)) { `$payload = '[NO_PAYLOAD]' }; `$logLine = if (`$payload -match 'UX_UI_AGENT') { ('[{0}] UX_AGENT_USED {1}' -f (Get-Date -Format o), `$payload) } else { ('[{0}] UserPromptSubmit {1}' -f (Get-Date -Format o), `$payload) }; `$maxRetries = 5; for (`$i = 0; `$i -lt `$maxRetries; `$i++) { try { Add-Content -Path `$logPath -Value `$logLine -ErrorAction Stop; break } catch { Start-Sleep -Milliseconds 100 } }\""
       }
     ],
     "preToolUse": [
       {
         "type": "command",
-        "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command '$logPath = ''C:\\Users\\Home\\Projects\\API-tester\\.github\\hooks\\copilot_chat_log.txt''; New-Item -ItemType Directory -Force -Path (Split-Path $logPath) | Out-Null; $payload = [Console]::In.ReadToEnd(); Add-Content -Path $logPath -Value (''[{0}] preToolUse {1}'' -f (Get-Date -Format o), $payload)'"
+        "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"`$basePath = Join-Path (Get-Location) '.github/hooks'; if (!(Test-Path `$basePath)) { New-Item -ItemType Directory -Path `$basePath | Out-Null }; `$logPath = Join-Path `$basePath 'copilot_chat_log.txt'; `$payload = ''; try { `$payload = [Console]::In.ReadToEnd() } catch { `$payload = '' }; if ([string]::IsNullOrWhiteSpace(`$payload)) { `$payload = '[NO_PAYLOAD]' }; `$logLine = ('[{0}] preToolUse {1}' -f (Get-Date -Format o), `$payload); `$maxRetries = 5; for (`$i = 0; `$i -lt `$maxRetries; `$i++) { try { Add-Content -Path `$logPath -Value `$logLine -ErrorAction Stop; break } catch { Start-Sleep -Milliseconds 100 } }\""
       }
     ]
   }

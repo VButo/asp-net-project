@@ -1,8 +1,115 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="dashboard-hero">
+    <div class="hero-copy">
+        <p class="hero-kicker">Workspace Command Center</p>
+        <h1>Testiraj API flow bez prebacivanja izmedu alata.</h1>
+        <p class="hero-subtext">
+            Jedinstveni dashboard za workspaceove, kolekcije, requestove i environmente. Brz pregled svega sto je bitno prije slanja iduceg requesta.
+        </p>
+        <div class="hero-actions">
+            <a class="btn app-btn app-btn-primary" href="#">Run Collection</a>
+            <a class="btn app-btn app-btn-muted" href="#">Open Request Builder</a>
+        </div>
+    </div>
+
+    <div class="hero-console" aria-label="API execution preview">
+        <div class="console-head">
+            <span></span><span></span><span></span>
+        </div>
+        <p><strong>POST</strong> /v1/payments/authorize</p>
+        <pre>{
+  "amount": 129.90,
+  "currency": "EUR",
+  "customerId": "cus_239A"
+}</pre>
+        <p class="console-status success">200 OK in 143 ms</p>
+    </div>
+</section>
+
+<section class="stats-grid" aria-label="Quick stats">
+    <article class="stat-card">
+        <p>Total Workspaceova</p>
+        <h2>07</h2>
+        <span>+2 ovaj tjedan</span>
+    </article>
+    <article class="stat-card">
+        <p>Aktivne Collectione</p>
+        <h2>19</h2>
+        <span>132 requesta mapirano</span>
+    </article>
+    <article class="stat-card">
+        <p>Ukupno Requestova</p>
+        <h2>246</h2>
+        <span>Last run: prije 2 min</span>
+    </article>
+    <article class="stat-card">
+        <p>Aktivni Environment</p>
+        <h2>staging-eu</h2>
+        <span>token validan jos 41 min</span>
+    </article>
+</section>
+
+<section class="dashboard-grid">
+    <article class="dashboard-panel">
+        <div class="panel-title-row">
+            <h3>Workspaceovi</h3>
+            <a href="#">View all</a>
+        </div>
+        <ul class="panel-list">
+            <li>
+                <strong>Payments Core</strong>
+                <span>6 collectiona · 48 requestova</span>
+            </li>
+            <li>
+                <strong>Identity Gateway</strong>
+                <span>4 collectiona · 32 requesta</span>
+            </li>
+            <li>
+                <strong>Billing Public API</strong>
+                <span>3 collectiona · 27 requestova</span>
+            </li>
+        </ul>
+    </article>
+
+    <article class="dashboard-panel">
+        <div class="panel-title-row">
+            <h3>Collectione</h3>
+            <a href="#">Create new</a>
+        </div>
+        <ul class="panel-list mono">
+            <li><strong>Auth / Sessions</strong><span>GET, POST, DELETE</span></li>
+            <li><strong>Transactions</strong><span>POST, PATCH, GET</span></li>
+            <li><strong>Webhooks</strong><span>POST test payloads</span></li>
+            <li><strong>Health Checks</strong><span>GET /ready, /live</span></li>
+        </ul>
+    </article>
+
+    <article class="dashboard-panel">
+        <div class="panel-title-row">
+            <h3>Brze Akcije</h3>
+            <a href="#">Shortcuts</a>
+        </div>
+        <div class="quick-actions">
+            <a href="#">+ Novi workspace</a>
+            <a href="#">+ Novi environment</a>
+            <a href="#">+ Export collection</a>
+            <a href="#">+ Generate mock response</a>
+        </div>
+    </article>
+
+    <article class="dashboard-panel">
+        <div class="panel-title-row">
+            <h3>Aktivni Environment</h3>
+            <a href="#">Switch</a>
+        </div>
+        <div class="env-box">
+            <p><span>Name</span><strong>staging-eu</strong></p>
+            <p><span>Base URL</span><strong>https://staging.api.company.com</strong></p>
+            <p><span>Variables</span><strong>14 loaded</strong></p>
+            <p><span>Secrets</span><strong>3 secured</strong></p>
+        </div>
+    </article>
+</section>
