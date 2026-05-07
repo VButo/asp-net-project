@@ -9,9 +9,9 @@
     <span>/</span>
     <a asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
     <span>/</span>
-    <a asp-area="" asp-controller="Home" asp-action="Collections">Collections</a>
+    <a asp-area="" asp-controller="Collection" asp-action="Index">Collections</a>
     <span>/</span>
-    <a asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a>
+    <a asp-area="" asp-controller="Collection" asp-action="Details">Collection Details</a>
     <span>/</span>
     <strong>Request Details</strong>
 </nav>
@@ -24,7 +24,7 @@
     </div>
     <div class="details-hero-actions">
         <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="RequestBuilder">Open in Builder</a>
-        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Back to Collection</a>
+        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Collection" asp-action="Details">Back to Collection</a>
     </div>
 </section>
 
@@ -32,13 +32,13 @@
     <article class="detail-panel">
         <div class="panel-title-row">
             <h3>Request Context</h3>
-            <a asp-area="" asp-controller="Home" asp-action="Requests">All Requests</a>
+            <a asp-area="" asp-controller="Request" asp-action="Index">All Requests</a>
         </div>
         <div class="env-box">
             <p><span>Method</span><strong>POST</strong></p>
             <p><span>URL</span><strong>/v1/payments/authorize</strong></p>
             <p><span>Workspace</span><strong><a asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Payments Core</a></strong></p>
-            <p><span>Collection</span><strong><a asp-area="" asp-controller="Home" asp-action="CollectionDetails">Payments Authorization</a></strong></p>
+            <p><span>Collection</span><strong><a asp-area="" asp-controller="Collection" asp-action="Details">Payments Authorization</a></strong></p>
         </div>
     </article>
 

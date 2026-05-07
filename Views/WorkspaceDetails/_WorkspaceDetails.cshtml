@@ -1,0 +1,40 @@
+@model API_tester.Models.ApiWorkspace
+
+<div class="workspace-details">
+    <div class="workspace-header">
+        <h2>@Model.Name</h2>
+        <p class="workspace-owner">Owner: @(Model.OwnerUser?.Username ?? "—")</p>
+        <p class="workspace-desc">@Model.Description</p>
+        <div class="workspace-stats">
+            <span>Collections: @Model.Collections.Count</span>
+            <span>Environments: @Model.Environments.Count</span>
+        </div>
+    </div>
+
+    <section class="workspace-collections">
+        <h4>Collections</h4>
+        <ul>
+            @foreach (var c in Model.Collections)
+            {
+                <li>@c.Name</li>
+            }
+        </ul>
+    </section>
+
+    <section class="workspace-environments">
+        <h4>Environments</h4>
+        @if (!Model.Environments.Any())
+        {
+            <p>No environments configured.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var env in Model.Environments)
+                {
+                    <li>@env.Name — @env.BaseUrl</li>
+                }
+            </ul>
+        }
+    </section>
+</div>

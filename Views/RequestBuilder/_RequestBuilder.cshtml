@@ -1,0 +1,88 @@
+@model API_tester.Models.ApiRequest
+
+@{
+    var selectedMethod = Model.Method;
+}
+
+<form id="requestBuilderForm" class="request-builder-form">
+    <section class="runner-request-head" aria-label="HTTP request setup">
+        <div class="runner-method-url">
+            <label class="runner-field" for="requestMethod">
+                <span>Method</span>
+                <select id="requestMethod" name="Method">
+                    @foreach (var method in Enum.GetValues(typeof(API_tester.Models.Enums.HttpMethodType)).Cast<API_tester.Models.Enums.HttpMethodType>())
+                    {
+                        if (method == selectedMethod)
+                        {
+                            <option value="@method" selected="selected">@method.ToString().ToUpperInvariant()</option>
+                        }
+                        else
+                        {
+                            <option value="@method">@method.ToString().ToUpperInvariant()</option>
+                        }
+                    }
+                </select>
+            </label>
+
+            <label class="runner-field runner-url-field" for="requestUrl">
+                <span>Request URL</span>
+                <input id="requestUrl" name="Url" value="@Model.Url" placeholder="https://api.example.com/v1/resource" />
+            </label>
+        </div>
+
+        <div class="runner-controls-row">
+            <label class="runner-field runner-env-field" for="requestEnvironment">
+                <span>Environment</span>
+                <select id="requestEnvironment" name="Environment">
+                    <option value="staging-eu" selected="selected">staging-eu</option>
+                    <option value="staging-us">staging-us</option>
+                    <option value="prod-readonly">prod-readonly</option>
+                    <option value="local-dev">local-dev</option>
+                </select>
+            </label>
+
+            <div class="builder-request-actions">
+                <button type="button" class="runner-send-btn">Save Request</button>
+                <button type="button" class="builder-secondary-btn" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+        <div class="runner-jump-links">
+            <a asp-area="" asp-controller="Request" asp-action="Index">View Requests</a>
+            <a asp-area="" asp-controller="Collection" asp-action="Index">Pick Collection</a>
+            <a asp-area="" asp-controller="Environment" asp-action="Index">Manage Environments</a>
+        </div>
+    </section>
+
+    <section class="runner-editor-panel" aria-label="Request editors">
+        <div class="runner-tab-strip">
+            <button type="button" class="runner-tab active">Headers</button>
+            <button type="button" class="runner-tab">Body</button>
+            <button type="button" class="runner-tab">Auth</button>
+            <button type="button" class="runner-tab">Tests</button>
+        </div>
+
+        <div class="runner-editors">
+            <article class="editor-card">
+                <header>
+                    <h2>Headers</h2>
+                    <span>4 active</span>
+                </header>
+                <div class="kv-list">
+                    <div><span>Content-Type</span><strong>application/json</strong></div>
+                    <div><span>Authorization</span><strong>Bearer {{access_token}}</strong></div>
+                    <div><span>X-Correlation-Id</span><strong>{{trace_id}}</strong></div>
+                    <div><span>X-Channel</span><strong>web-checkout</strong></div>
+                </div>
+            </article>
+
+            <article class="editor-card body-card">
+                <header>
+                    <h2>Body (JSON)</h2>
+                    <span>raw</span>
+                </header>
+                <pre>@(string.IsNullOrWhiteSpace(Model.Body) ? "{\n  \"template\": \"payment-received\",\n  \"locale\": \"hr-HR\"\n}" : Model.Body)</pre>
+            </article>
+        </div>
+    </section>
+</form>

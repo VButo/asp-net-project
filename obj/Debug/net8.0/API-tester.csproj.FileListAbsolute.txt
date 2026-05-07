@@ -62,3 +62,4 @@ C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\refint\A
 C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.pdb
 C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\API-tester.genruntimeconfig.cache
 C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\obj\Debug\net8.0\ref\API-tester.dll
+C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\API-tester.sourcelink.json

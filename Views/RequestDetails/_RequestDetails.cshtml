@@ -1,0 +1,44 @@
+@model API_tester.Models.ApiRequest
+
+<div class="request-details-modal">
+    <div class="request-header">
+        <h3><span class="method-badge @Model.Method.ToString().ToLowerInvariant()">@Model.Method.ToString().ToUpperInvariant()</span> @Model.Url</h3>
+        <p class="request-collection">Collection: @(Model.Collection?.Name ?? "—")</p>
+        <div class="request-tags">
+            @foreach (var tagName in Model.TagLinks.Select(link => link.Tag?.Name).Where(name => !string.IsNullOrWhiteSpace(name)))
+            {
+                <span class="tag">@tagName</span>
+            }
+        </div>
+    </div>
+
+    <section class="request-meta">
+        <p><strong>Created:</strong> @Model.CreatedAt.ToLocalTime().ToString("g")</p>
+        <p><strong>Last Executed:</strong> @(Model.LastExecutedAt.HasValue ? Model.LastExecutedAt.Value.ToLocalTime().ToString("g") : "Never")</p>
+    </section>
+
+    <section class="request-body">
+        <h4>Request Body</h4>
+        <pre>@(string.IsNullOrWhiteSpace(Model.Body) ? "(empty)" : Model.Body)</pre>
+    </section>
+
+    <section class="request-responses">
+        <h4>Responses</h4>
+        @if (!Model.Responses.Any())
+        {
+            <p>No responses recorded.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var resp in Model.Responses.OrderByDescending(r => r.ReceivedAt))
+                {
+                    <li>
+                        <div><strong>@resp.StatusCode</strong> · @resp.DurationMs ms · @resp.ReceivedAt.ToLocalTime().ToString("g")</div>
+                        <pre class="response-body">@resp.ResponseBody</pre>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+</div>

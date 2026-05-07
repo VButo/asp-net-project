@@ -1,0 +1,94 @@
+@model List<ApiWorkspace>
+
+@{
+    var heroKicker = ViewData["HeroKicker"] as string ?? string.Empty;
+    var heroTitle = ViewData["HeroTitle"] as string ?? string.Empty;
+    var heroDescription = ViewData["HeroDescription"] as string ?? string.Empty;
+    var primaryActionText = ViewData["PrimaryActionText"] as string ?? string.Empty;
+    var secondaryActionText = ViewData["SecondaryActionText"] as string ?? string.Empty;
+    var searchPlaceholder = ViewData["SearchPlaceholder"] as string ?? string.Empty;
+    var filters = ViewData["Filters"] as List<string> ?? new List<string>();
+}
+
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <strong>Workspaces</strong>
+</nav>
+
+<section class="workspaces-hero">
+    <div class="workspaces-hero-copy">
+        <p class="workspaces-kicker">@heroKicker</p>
+        <h1>@heroTitle</h1>
+        <p>@heroDescription</p>
+    </div>
+    <div class="workspaces-hero-actions">
+        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="WorkspaceDetails" asp-action="Details">@primaryActionText</a>
+        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Collection" asp-action="Index">@secondaryActionText</a>
+    </div>
+</section>
+
+<section class="workspaces-toolbar" aria-label="Workspace filters">
+    <div class="workspace-search">
+        <label for="workspaceSearch">Pretraga</label>
+        <input id="workspaceSearch" type="text" value="" placeholder="@searchPlaceholder" />
+    </div>
+    <div class="workspace-filter-group">
+        @foreach (var filter in filters.Select((value, index) => new { value, index }))
+        {
+            <button class="filter-chip @(filter.index == 0 ? "active" : string.Empty)" type="button">@filter.value</button>
+        }
+    </div>
+</section>
+
+<section class="workspaces-grid" aria-label="Workspace list">
+    @foreach (var workspace in Model)
+    {
+        <article class="workspace-card">
+            <div class="workspace-head">
+                <h2>@workspace.Name</h2>
+                <span class="workspace-owner">Owner: @(workspace.OwnerUser?.Username ?? string.Empty)</span>
+            </div>
+            <p class="workspace-description">@workspace.Description</p>
+            <div class="workspace-metrics">
+                <p><span>Collectiona</span><strong>@workspace.Collections.Count</strong></p>
+                <p><span>Environmenta</span><strong>@workspace.Environments.Count</strong></p>
+            </div>
+            <a href="#" class="entity-link open-workspace-details" data-workspace-id="@workspace.Id">Open Workspace Details</a>
+        </article>
+    }
+</section>
+
+<div class="modal fade" id="workspaceDetailsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Workspace Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">Loading…</div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('.open-workspace-details').on('click', function (e) {
+                e.preventDefault();
+                var id = $(this).data('workspace-id');
+                var url = '/WorkspaceDetails/Details?workspaceId=' + id;
+                $.get(url, function (html) {
+                    $('#workspaceDetailsModal .modal-body').html(html);
+                    var modalEl = document.getElementById('workspaceDetailsModal');
+                    if (modalEl && window.bootstrap) {
+                        var modal = new bootstrap.Modal(modalEl);
+                        modal.show();
+                    }
+                }).fail(function () {
+                    alert('Failed to load workspace details');
+                });
+            });
+        });
+    </script>
+}

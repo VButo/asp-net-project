@@ -5,11 +5,11 @@
 <nav class="page-crumbs" aria-label="Breadcrumb">
     <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
     <span>/</span>
-    <a asp-area="" asp-controller="Home" asp-action="Privacy">Workspaces</a>
+    <a asp-area="" asp-controller="Workspaces" asp-action="Index">Workspaces</a>
     <span>/</span>
-    <a asp-area="" asp-controller="Home" asp-action="Collections">Collections</a>
+    <a asp-area="" asp-controller="Collection" asp-action="Index">Collections</a>
     <span>/</span>
-    <a asp-area="" asp-controller="Home" asp-action="Requests">Requests</a>
+    <a asp-area="" asp-controller="Request" asp-action="Index">Requests</a>
     <span>/</span>
     <strong>Request Builder</strong>
 </nav>
@@ -23,7 +23,7 @@
     <div class="runner-hero-stats">
         <p><span>Current Environment</span><strong>staging-eu</strong></p>
         <p><span>Last Execution</span><strong>202 Accepted · 121 ms</strong></p>
-        <p><span>Open Request</span><strong><a asp-area="" asp-controller="Home" asp-action="RequestDetails">POST /v1/notifications/dispatch</a></strong></p>
+        <p><span>Open Request</span><strong><a asp-area="" asp-controller="RequestDetails" asp-action="Details">POST /v1/notifications/dispatch</a></strong></p>
     </div>
 </section>
 
@@ -60,8 +60,8 @@
                 <button type="button" class="runner-send-btn">Send</button>
             </div>
             <div class="runner-jump-links">
-                <a asp-area="" asp-controller="Home" asp-action="Environments">Manage Environments</a>
-                <a asp-area="" asp-controller="Home" asp-action="RequestDetails">Back to Request Details</a>
+                <a asp-area="" asp-controller="Environment" asp-action="Index">Manage Environments</a>
+                <a asp-area="" asp-controller="RequestDetails" asp-action="Details">Back to Request Details</a>
             </div>
         </section>
 
@@ -117,8 +117,8 @@
         </div>
 
         <div class="response-meta">
-            <p><span>Collection</span><strong><a asp-area="" asp-controller="Home" asp-action="CollectionDetails">Notification Dispatch</a></strong></p>
-            <p><span>Request</span><strong><a asp-area="" asp-controller="Home" asp-action="RequestDetails">POST /v1/notifications/dispatch</a></strong></p>
+            <p><span>Collection</span><strong><a asp-area="" asp-controller="Collection" asp-action="Details">Notification Dispatch</a></strong></p>
+            <p><span>Request</span><strong><a asp-area="" asp-controller="RequestDetails" asp-action="Details">POST /v1/notifications/dispatch</a></strong></p>
             <p><span>Executed At</span><strong>Today, 15:42:09</strong></p>
         </div>
 
@@ -143,9 +143,9 @@
 }</pre>
 
         <div class="runner-footer-links">
-            <a asp-area="" asp-controller="Home" asp-action="RequestDetails">Open Full Response Context</a>
-            <a asp-area="" asp-controller="Home" asp-action="CollectionDetails">Back to Collection</a>
-            <a asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Back to Workspace</a>
+            <a asp-area="" asp-controller="RequestDetails" asp-action="Details">Open Full Response Context</a>
+            <a asp-area="" asp-controller="Collection" asp-action="Details">Back to Collection</a>
+            <a asp-area="" asp-controller="WorkspaceDetails" asp-action="Details">Back to Workspace</a>
         </div>
     </aside>
 </section>

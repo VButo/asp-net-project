@@ -10,8 +10,8 @@
             Jedinstveni dashboard za workspaceove, kolekcije, requestove i environmente. Brz pregled svega sto je bitno prije slanja iduceg requesta.
         </p>
         <div class="hero-actions">
-            <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Home" asp-action="RequestBuilder">Open Request Builder</a>
-            <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Home" asp-action="Requests">Browse Requests</a>
+            <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="RequestBuilder" asp-action="Index">Open Request Builder</a>
+            <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Request" asp-action="Index">Browse Requests</a>
         </div>
     </div>
 
@@ -29,30 +29,65 @@
     </div>
 </section>
 
+<!-- Workspace details modal -->
+<div class="modal fade" id="workspaceDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Workspace Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">Loading…</div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <script>
+                $(function () {
+                        $('.open-workspace-details').on('click', function (e) {
+                                e.preventDefault();
+                                var id = $(this).data('workspace-id');
+                                var url = '/WorkspaceDetails/Details' + (id ? ('?workspaceId=' + id) : '');
+                                $.get(url, function (html) {
+                                        $('#workspaceDetailsModal .modal-body').html(html);
+                                        var modalEl = document.getElementById('workspaceDetailsModal');
+                                        if (modalEl && window.bootstrap) {
+                                                var modal = new bootstrap.Modal(modalEl);
+                                                modal.show();
+                                        }
+                                }).fail(function () {
+                                        alert('Failed to load workspace details');
+                                });
+                        });
+                });
+        </script>
+}
+
 <section class="stats-grid" aria-label="Quick stats">
     <article class="stat-card">
         <p>Total Workspaceova</p>
         <h2>07</h2>
         <span>+2 ovaj tjedan</span>
-        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Privacy">Open Workspaces</a>
+        <a class="entity-link" asp-area="" asp-controller="Workspaces" asp-action="Index">Open Workspaces</a>
     </article>
     <article class="stat-card">
         <p>Aktivne Collectione</p>
         <h2>19</h2>
         <span>132 requesta mapirano</span>
-        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Collections">Open Collections</a>
+        <a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Index">Open Collections</a>
     </article>
     <article class="stat-card">
         <p>Ukupno Requestova</p>
         <h2>246</h2>
         <span>Last run: prije 2 min</span>
-        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Requests">Open Requests</a>
+        <a class="entity-link" asp-area="" asp-controller="Request" asp-action="Index">Open Requests</a>
     </article>
     <article class="stat-card">
         <p>Aktivni Environment</p>
         <h2>staging-eu</h2>
         <span>token validan jos 41 min</span>
-        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Environments">Open Environments</a>
+        <a class="entity-link" asp-area="" asp-controller="Environment" asp-action="Index">Open Environments</a>
     </article>
 </section>
 
@@ -61,25 +96,25 @@
         <p class="flow-step">01</p>
         <h3>Workspaces</h3>
         <p>Odaberi timski kontekst i domenu API-ja koju testiras.</p>
-        <a asp-area="" asp-controller="Home" asp-action="Privacy">Open Workspaces</a>
+        <a asp-area="" asp-controller="Workspaces" asp-action="Index">Open Workspaces</a>
     </article>
     <article class="flow-card">
         <p class="flow-step">02</p>
         <h3>Collections</h3>
         <p>Pregledaj endpoint grupe i mapirane scenarije po workspaceu.</p>
-        <a asp-area="" asp-controller="Home" asp-action="Collections">Go to Collections</a>
+        <a asp-area="" asp-controller="Collection" asp-action="Index">Go to Collections</a>
     </article>
     <article class="flow-card">
         <p class="flow-step">03</p>
         <h3>Requests</h3>
         <p>Filtriraj requestove po metodi, tagovima i zadnjem statusu.</p>
-        <a asp-area="" asp-controller="Home" asp-action="Requests">Open Request List</a>
+        <a asp-area="" asp-controller="Request" asp-action="Index">Open Request List</a>
     </article>
     <article class="flow-card">
         <p class="flow-step">04</p>
         <h3>Request Builder</h3>
         <p>Sastavi payload, odaberi environment i odmah pokreni poziv.</p>
-        <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Launch Builder</a>
+        <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Launch Builder</a>
     </article>
 </section>
 
@@ -87,23 +122,23 @@
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Workspaceovi</h3>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">View all</a>
+            <a asp-area="" asp-controller="Workspaces" asp-action="Index">View all</a>
         </div>
         <ul class="panel-list">
             <li>
                 <strong>Payments Core</strong>
                 <span>6 collectiona · 48 requestova</span>
-                <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
+                <a href="#" class="entity-link open-workspace-details" data-workspace-id="11111111-1111-1111-1111-111111111111">Workspace Details</a>
             </li>
             <li>
                 <strong>Identity Gateway</strong>
                 <span>4 collectiona · 32 requesta</span>
-                <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
+                <a href="#" class="entity-link open-workspace-details" data-workspace-id="22222222-2222-2222-2222-222222222222">Workspace Details</a>
             </li>
             <li>
                 <strong>Billing Public API</strong>
                 <span>3 collectiona · 27 requestova</span>
-                <a class="entity-link" asp-area="" asp-controller="Home" asp-action="WorkspaceDetails">Workspace Details</a>
+                <a href="#" class="entity-link open-workspace-details" data-workspace-id="33333333-3333-3333-3333-333333333333">Workspace Details</a>
             </li>
         </ul>
     </article>
@@ -111,33 +146,33 @@
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Collectione</h3>
-            <a asp-area="" asp-controller="Home" asp-action="Collections">Open catalog</a>
+            <a asp-area="" asp-controller="Collection" asp-action="Index">Open catalog</a>
         </div>
         <ul class="panel-list mono">
-            <li><strong>Auth / Sessions</strong><span>GET, POST, DELETE</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
-            <li><strong>Transactions</strong><span>POST, PATCH, GET</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
-            <li><strong>Webhooks</strong><span>POST test payloads</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
-            <li><strong>Health Checks</strong><span>GET /ready, /live</span><a class="entity-link" asp-area="" asp-controller="Home" asp-action="CollectionDetails">Collection Details</a></li>
+            <li><strong>Auth / Sessions</strong><span>GET, POST, DELETE</span><a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Details">Collection Details</a></li>
+            <li><strong>Transactions</strong><span>POST, PATCH, GET</span><a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Details">Collection Details</a></li>
+            <li><strong>Webhooks</strong><span>POST test payloads</span><a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Details">Collection Details</a></li>
+            <li><strong>Health Checks</strong><span>GET /ready, /live</span><a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Details">Collection Details</a></li>
         </ul>
     </article>
 
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Brze Akcije</h3>
-            <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Runner</a>
+            <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Runner</a>
         </div>
         <div class="quick-actions">
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">+ Open workspaces</a>
-            <a asp-area="" asp-controller="Home" asp-action="Collections">+ Open collections</a>
-            <a asp-area="" asp-controller="Home" asp-action="Requests">+ Open requests</a>
-            <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">+ New request in builder</a>
+            <a asp-area="" asp-controller="Workspaces" asp-action="Index">+ Open workspaces</a>
+            <a asp-area="" asp-controller="Collection" asp-action="Index">+ Open collections</a>
+            <a asp-area="" asp-controller="Request" asp-action="Index">+ Open requests</a>
+            <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">+ New request in builder</a>
         </div>
     </article>
 
     <article class="dashboard-panel">
         <div class="panel-title-row">
             <h3>Aktivni Environment</h3>
-            <a asp-area="" asp-controller="Home" asp-action="RequestBuilder">Switch in builder</a>
+            <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Switch in builder</a>
         </div>
         <div class="env-box">
             <p><span>Name</span><strong>staging-eu</strong></p>
@@ -145,6 +180,6 @@
             <p><span>Variables</span><strong>14 loaded</strong></p>
             <p><span>Secrets</span><strong>3 secured</strong></p>
         </div>
-        <a class="entity-link" asp-area="" asp-controller="Home" asp-action="Environments">Environment Details</a>
+        <a class="entity-link" asp-area="" asp-controller="Environment" asp-action="Index">Environment Details</a>
     </article>
 </section>

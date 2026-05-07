@@ -1550,8 +1550,109 @@ a {
   border-radius: 999px;
   padding: 0.3rem 0.66rem;
   background: #10263a;
+
+.response-tab {
   color: #cde3f7;
   font-size: 0.75rem;
+}
+
+.response-tab.active {
+  border-color: transparent;
+  color: #111008;
+  background: linear-gradient(130deg, var(--amber), #ffd0a3);
+  font-weight: 700;
+}
+
+.response-body {
+  border: 1px solid #2f5068;
+  border-radius: 11px;
+}
+
+.runner-jump-links {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  padding-top: 0.15rem;
+}
+
+.runner-jump-links a,
+.runner-footer-links a {
+  color: #8ff4f6;
+  text-decoration: none;
+  font-size: 0.78rem;
+}
+
+.runner-jump-links a:hover,
+.runner-jump-links a:focus,
+.runner-footer-links a:hover,
+.runner-footer-links a:focus {
+  text-decoration: underline;
+}
+
+.builder-request-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.builder-secondary-btn {
+  min-width: 126px;
+  border: 1px solid #345870;
+  border-radius: 10px;
+  padding: 0.62rem 0.92rem;
+  background: #0b1721;
+  color: #e5f3ff;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.builder-secondary-btn:hover,
+.builder-secondary-btn:focus {
+  background: #102334;
+}
+
+.request-builder-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.request-builder-form .runner-editor-panel {
+  margin-top: 0.2rem;
+}
+
+.request-builder-dialog {
+  max-width: 1120px;
+}
+
+.request-builder-modal {
+  border: 1px solid #29465c;
+  border-radius: 16px;
+  background: linear-gradient(165deg, rgba(14, 25, 35, 0.99), rgba(11, 21, 30, 0.97));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+.request-builder-modal-header {
+  border-bottom: 1px solid #2c4a5f;
+  background: transparent;
+  color: var(--text-main);
+}
+
+.request-builder-modal-header .btn-close {
+  filter: invert(1) grayscale(1) brightness(1.2);
+  opacity: 0.9;
+}
+
+.request-builder-modal-body {
+  padding: 0.9rem;
+}
+
+.request-builder-modal .runner-request-head {
+  margin-bottom: 0.75rem;
+}
+
+.request-builder-modal .builder-secondary-btn {
+  min-width: 0;
 }
 
 .response-tab.active {

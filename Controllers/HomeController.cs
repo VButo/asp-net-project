@@ -20,30 +20,10 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
-        return View();
+        return RedirectToAction("Index", "Workspaces");
     }
 
     public IActionResult WorkspaceDetails()
-    {
-        return View();
-    }
-
-    public IActionResult Environments()
-    {
-        return View();
-    }
-
-    public IActionResult Collections()
-    {
-        return View();
-    }
-
-    public IActionResult CollectionDetails()
-    {
-        return View();
-    }
-
-    public IActionResult Requests()
     {
         return View();
     }
@@ -55,7 +35,7 @@ public class HomeController : Controller
 
     public IActionResult RequestBuilder()
     {
-        return View();
+        return RedirectToAction("Index", "RequestBuilder");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
