@@ -22,6 +22,10 @@ public class WorkspacesController : Controller
             .Include(w => w.Environments)
             .ToListAsync();
 
+        ViewBag.Users = await _context.Users
+            .OrderBy(user => user.Username)
+            .ToListAsync();
+
         ViewData["Title"] = "Workspaces";
         ViewData["BreadcrumbCurrent"] = "Workspaces";
         ViewData["HeroKicker"] = "Workspace Registry";
@@ -36,11 +40,24 @@ public class WorkspacesController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ApiWorkspace workspace)
     {
         if (ModelState.IsValid)
         {
             workspace.CreatedAt = DateTime.Now;
+            if (workspace.OwnerUserId == 0)
+            {
+                var firstUser = await _context.Users.OrderBy(user => user.Id).FirstOrDefaultAsync();
+                if (firstUser == null)
+                {
+                    ModelState.AddModelError(nameof(workspace.OwnerUserId), "Create at least one user before creating a workspace.");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                workspace.OwnerUserId = firstUser.Id;
+            }
+
             _context.ApiWorkspaces.Add(workspace);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

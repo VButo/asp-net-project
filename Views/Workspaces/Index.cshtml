@@ -1,4 +1,5 @@
 @model List<ApiWorkspace>
+@using API_tester.Models
 
 @{
     var heroKicker = ViewData["HeroKicker"] as string ?? string.Empty;
@@ -8,6 +9,7 @@
     var secondaryActionText = ViewData["SecondaryActionText"] as string ?? string.Empty;
     var searchPlaceholder = ViewData["SearchPlaceholder"] as string ?? string.Empty;
     var filters = ViewData["Filters"] as List<string> ?? new List<string>();
+    var users = ViewBag.Users as IEnumerable<User> ?? Enumerable.Empty<User>();
 }
 
 <nav class="page-crumbs" aria-label="Breadcrumb">
@@ -23,7 +25,7 @@
         <p>@heroDescription</p>
     </div>
     <div class="workspaces-hero-actions">
-        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Workspaces" asp-action="Index">@primaryActionText</a>
+        <button type="button" class="btn app-btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#workspaceCreateModal">@primaryActionText</button>
         <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Collection" asp-action="Index">@secondaryActionText</a>
     </div>
 </section>
@@ -59,6 +61,48 @@
     }
 </section>
 
+<div class="modal fade" id="workspaceCreateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Workspace</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-area="" asp-controller="Workspaces" asp-action="Create" method="post" class="workspace-create-form">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                                <label class="form-label" for="workspaceName">Name</label>
+                                <input class="form-control" id="workspaceName" name="Name" type="text" required />
+                        </div>
+
+                        <div class="mb-3">
+                                <label class="form-label" for="workspaceDescription">Description</label>
+                                <textarea class="form-control" id="workspaceDescription" name="Description" rows="4"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                                <label class="form-label" for="workspaceOwner">Owner</label>
+                                <select class="form-select" id="workspaceOwner" name="OwnerUserId" required>
+                                        <option value="0">Select owner</option>
+                                        @foreach (var user in users)
+                                        {
+                                                <option value="@user.Id">@user.Username (@user.Email)</option>
+                                        }
+                                </select>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn app-btn app-btn-muted" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn app-btn app-btn-primary">Create Workspace</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="workspaceDetailsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -74,6 +118,10 @@
 @section Scripts {
     <script>
         $(function () {
+            $('#workspaceCreateModal').on('shown.bs.modal', function () {
+                $('#workspaceName').trigger('focus');
+            });
+
             $('.open-workspace-details').on('click', function (e) {
                 e.preventDefault();
                 var id = $(this).data('workspace-id');
