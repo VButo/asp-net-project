@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using API_tester.Models;
 using API_tester.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API_tester.Controllers;
 
@@ -16,6 +17,8 @@ public class WorkspacesController : Controller
 
     public async Task<IActionResult> Index()
     {
+        var currentUser = await ResolveCurrentUserAsync();
+
         var workspaces = await _context.ApiWorkspaces
             .Include(w => w.OwnerUser)
             .Include(w => w.Collections)
@@ -25,6 +28,7 @@ public class WorkspacesController : Controller
         ViewBag.Users = await _context.Users
             .OrderBy(user => user.Username)
             .ToListAsync();
+        ViewBag.CurrentUserId = currentUser?.Id ?? 0;
 
         ViewData["Title"] = "Workspaces";
         ViewData["BreadcrumbCurrent"] = "Workspaces";
@@ -48,14 +52,14 @@ public class WorkspacesController : Controller
             workspace.CreatedAt = DateTime.Now;
             if (workspace.OwnerUserId == 0)
             {
-                var firstUser = await _context.Users.OrderBy(user => user.Id).FirstOrDefaultAsync();
-                if (firstUser == null)
+                var currentUser = await ResolveCurrentUserAsync();
+                if (currentUser == null)
                 {
-                    ModelState.AddModelError(nameof(workspace.OwnerUserId), "Create at least one user before creating a workspace.");
+                    ModelState.AddModelError(nameof(workspace.OwnerUserId), "Current user was not found in the User table.");
                     return RedirectToAction(nameof(Index));
                 }
 
-                workspace.OwnerUserId = firstUser.Id;
+                workspace.OwnerUserId = currentUser.Id;
             }
 
             _context.ApiWorkspaces.Add(workspace);
@@ -63,5 +67,45 @@ public class WorkspacesController : Controller
             return RedirectToAction(nameof(Index));
         }
         return View(workspace);
+    }
+
+    private async Task<User?> ResolveCurrentUserAsync()
+    {
+        var identityName = User.Identity?.Name;
+
+        if (!string.IsNullOrWhiteSpace(identityName))
+        {
+            var currentUser = await _context.Users.FirstOrDefaultAsync(user =>
+                user.Username == identityName || user.Email == identityName);
+
+            if (currentUser != null)
+            {
+                return currentUser;
+            }
+        }
+
+        var emailClaim = User.FindFirstValue(ClaimTypes.Email);
+        if (!string.IsNullOrWhiteSpace(emailClaim))
+        {
+            var currentUser = await _context.Users.FirstOrDefaultAsync(user => user.Email == emailClaim);
+            if (currentUser != null)
+            {
+                return currentUser;
+            }
+        }
+
+        var nameClaim = User.FindFirstValue(ClaimTypes.Name);
+        if (!string.IsNullOrWhiteSpace(nameClaim))
+        {
+            var currentUser = await _context.Users.FirstOrDefaultAsync(user =>
+                user.Username == nameClaim || user.Email == nameClaim);
+
+            if (currentUser != null)
+            {
+                return currentUser;
+            }
+        }
+
+        return await _context.Users.OrderBy(user => user.Id).FirstOrDefaultAsync();
     }
 }
