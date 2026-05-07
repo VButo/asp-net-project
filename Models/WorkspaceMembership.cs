@@ -2,9 +2,9 @@ namespace API_tester.Models;
 
 public class WorkspaceMembership
 {
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public User? User { get; set; }
-    public Guid WorkspaceId { get; set; }
+    public int WorkspaceId { get; set; }
     public ApiWorkspace? Workspace { get; set; }
     public string MemberRole { get; set; }
     public DateTime JoinedAt { get; set; }

@@ -23,14 +23,14 @@
         <p>@heroDescription</p>
     </div>
     <div class="workspaces-hero-actions">
-        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="WorkspaceDetails" asp-action="Details">@primaryActionText</a>
+        <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="Workspaces" asp-action="Index">@primaryActionText</a>
         <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Collection" asp-action="Index">@secondaryActionText</a>
     </div>
 </section>
 
 <section class="workspaces-toolbar" aria-label="Workspace filters">
     <div class="workspace-search">
-        <label for="workspaceSearch">Pretraga</label>
+        <label for="workspaceSearch">Search</label>
         <input id="workspaceSearch" type="text" value="" placeholder="@searchPlaceholder" />
     </div>
     <div class="workspace-filter-group">
@@ -51,8 +51,8 @@
             </div>
             <p class="workspace-description">@workspace.Description</p>
             <div class="workspace-metrics">
-                <p><span>Collectiona</span><strong>@workspace.Collections.Count</strong></p>
-                <p><span>Environmenta</span><strong>@workspace.Environments.Count</strong></p>
+                <p><span>Collections</span><strong>@workspace.Collections.Count</strong></p>
+                <p><span>Environments</span><strong>@workspace.Environments.Count</strong></p>
             </div>
             <a href="#" class="entity-link open-workspace-details" data-workspace-id="@workspace.Id">Open Workspace Details</a>
         </article>

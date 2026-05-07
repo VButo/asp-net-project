@@ -4,14 +4,14 @@ namespace API_tester.Models;
 
 public class ApiRequest
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Url { get; set; }
     public HttpMethodType Method { get; set; }
     public string Body { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? LastExecutedAt { get; set; }
-    public Guid CollectionId { get; set; }
+    public int CollectionId { get; set; }
     public ApiCollection? Collection { get; set; }
     public List<ApiHeader> Headers { get; set; }
     public List<ApiResponse> Responses { get; set; }

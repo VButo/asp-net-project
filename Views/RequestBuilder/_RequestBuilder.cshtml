@@ -1,11 +1,21 @@
 @model API_tester.Models.ApiRequest
+@using API_tester.Models
 
 @{
     var selectedMethod = Model.Method;
+    var collections = ViewBag.Collections as IEnumerable<ApiCollection> ?? Enumerable.Empty<ApiCollection>();
 }
 
-<form id="requestBuilderForm" class="request-builder-form">
+<form id="requestBuilderForm" class="request-builder-form" asp-area="" asp-controller="RequestBuilder" asp-action="Save" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Id" value="@Model.Id" />
+
     <section class="runner-request-head" aria-label="HTTP request setup">
+        <label class="runner-field" for="requestName">
+            <span>Request Name</span>
+            <input id="requestName" name="Name" value="@Model.Name" placeholder="Create user" />
+        </label>
+
         <div class="runner-method-url">
             <label class="runner-field" for="requestMethod">
                 <span>Method</span>
@@ -30,6 +40,24 @@
             </label>
         </div>
 
+        <label class="runner-field" for="requestCollection">
+            <span>Collection</span>
+            <select id="requestCollection" name="CollectionId">
+                <option value="0">Select a collection</option>
+                @foreach (var collection in collections)
+                {
+                    if (collection.Id == Model.CollectionId)
+                    {
+                        <option value="@collection.Id" selected="selected">@collection.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@collection.Id">@collection.Name</option>
+                    }
+                }
+            </select>
+        </label>
+
         <div class="runner-controls-row">
             <label class="runner-field runner-env-field" for="requestEnvironment">
                 <span>Environment</span>
@@ -42,7 +70,7 @@
             </label>
 
             <div class="builder-request-actions">
-                <button type="button" class="runner-send-btn">Save Request</button>
+                <button type="submit" class="runner-send-btn">Save Request</button>
                 <button type="button" class="builder-secondary-btn" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -81,7 +109,7 @@
                     <h2>Body (JSON)</h2>
                     <span>raw</span>
                 </header>
-                <pre>@(string.IsNullOrWhiteSpace(Model.Body) ? "{\n  \"template\": \"payment-received\",\n  \"locale\": \"hr-HR\"\n}" : Model.Body)</pre>
+                <textarea name="Body" rows="14" spellcheck="false">@(string.IsNullOrWhiteSpace(Model.Body) ? "{\n  \"template\": \"payment-received\",\n  \"locale\": \"en-US\"\n}" : Model.Body)</textarea>
             </article>
         </div>
     </section>
