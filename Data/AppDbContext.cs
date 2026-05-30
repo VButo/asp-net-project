@@ -9,12 +9,12 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<ApiWorkspace> ApiWorkspaces { get; set; }
-    public DbSet<ApiCollection> ApiCollections { get; set; }
-    public DbSet<ApiRequest> ApiRequests { get; set; }
-    public DbSet<ApiHeader> ApiHeaders { get; set; }
-    public DbSet<ApiResponse> ApiResponses { get; set; }
-    public DbSet<ApiEnvironment> ApiEnvironments { get; set; }
+    public DbSet<ApiWorkspace> Workspaces { get; set; }
+    public DbSet<ApiCollection> Collections { get; set; }
+    public DbSet<ApiRequest> Requests { get; set; }
+    public DbSet<ApiHeader> Headers { get; set; }
+    public DbSet<ApiResponse> Responses { get; set; }
+    public DbSet<ApiEnvironment> Environments { get; set; }
     public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
     public DbSet<RequestTag> RequestTags { get; set; }
     public DbSet<User> Users { get; set; }
@@ -27,18 +27,18 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<ApiWorkspace>().ToTable("ApiWorkspace");
-        modelBuilder.Entity<ApiCollection>().ToTable("ApiCollection");
-        modelBuilder.Entity<ApiRequest>().ToTable("ApiRequest");
-        modelBuilder.Entity<ApiHeader>().ToTable("ApiHeader");
-        modelBuilder.Entity<ApiResponse>().ToTable("ApiResponse");
-        modelBuilder.Entity<ApiEnvironment>().ToTable("ApiEnvironment");
-        modelBuilder.Entity<EnvironmentVariable>().ToTable("EnvironmentVariable");
-        modelBuilder.Entity<RequestTag>().ToTable("RequestTag");
-        modelBuilder.Entity<User>().ToTable("User");
-        modelBuilder.Entity<RequestTagMap>().ToTable("RequestTagMap");
-        modelBuilder.Entity<RequestEnvironmentLink>().ToTable("RequestEnvironmentLink");
-        modelBuilder.Entity<WorkspaceMembership>().ToTable("WorkspaceMembership");
+        modelBuilder.Entity<ApiWorkspace>().ToTable("workspaces");
+        modelBuilder.Entity<ApiCollection>().ToTable("collections");
+        modelBuilder.Entity<ApiRequest>().ToTable("requests");
+        modelBuilder.Entity<ApiHeader>().ToTable("headers");
+        modelBuilder.Entity<ApiResponse>().ToTable("responses");
+        modelBuilder.Entity<ApiEnvironment>().ToTable("environments");
+        modelBuilder.Entity<EnvironmentVariable>().ToTable("environmentvariables");
+        modelBuilder.Entity<RequestTag>().ToTable("requesttag");
+        modelBuilder.Entity<User>().ToTable("users");
+        modelBuilder.Entity<RequestTagMap>().ToTable("requesttagmap");
+        modelBuilder.Entity<RequestEnvironmentLink>().ToTable("requestenvironmentlink");
+        modelBuilder.Entity<WorkspaceMembership>().ToTable("workspacemembership");
 
         // Composite Keys
         modelBuilder.Entity<RequestTagMap>().HasKey(x => new { x.RequestId, x.TagId });

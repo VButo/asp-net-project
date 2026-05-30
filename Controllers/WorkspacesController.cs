@@ -15,11 +15,12 @@ public class WorkspacesController : Controller
         _context = context;
     }
 
+    [HttpGet("workspaces")]
     public async Task<IActionResult> Index()
     {
         var currentUser = await ResolveCurrentUserAsync();
 
-        var workspaces = await _context.ApiWorkspaces
+        var workspaces = await _context.Workspaces
             .Include(w => w.OwnerUser)
             .Include(w => w.Collections)
             .Include(w => w.Environments)
@@ -43,7 +44,7 @@ public class WorkspacesController : Controller
         return View(workspaces);
     }
 
-    [HttpPost]
+    [HttpPost("workspaces/create")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ApiWorkspace workspace)
     {
@@ -62,7 +63,7 @@ public class WorkspacesController : Controller
                 workspace.OwnerUserId = currentUser.Id;
             }
 
-            _context.ApiWorkspaces.Add(workspace);
+            _context.Workspaces.Add(workspace);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

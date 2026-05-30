@@ -12,20 +12,20 @@ public class ApiRequest
     public DateTime CreatedAt { get; set; }
     public DateTime? LastExecutedAt { get; set; }
     public int CollectionId { get; set; }
-    public ApiCollection? Collection { get; set; }
-    public List<ApiHeader> Headers { get; set; }
-    public List<ApiResponse> Responses { get; set; }
-    public List<RequestTagMap> TagLinks { get; set; }
-    public List<RequestEnvironmentLink> EnvironmentLinks { get; set; }
+    public virtual ApiCollection? Collection { get; set; }
+    public virtual ICollection<ApiHeader> Headers { get; set; }
+    public virtual ICollection<ApiResponse> Responses { get; set; }
+    public virtual ICollection<RequestTagMap> TagLinks { get; set; }
+    public virtual ICollection<RequestEnvironmentLink> EnvironmentLinks { get; set; }
 
     public ApiRequest()
     {
         Name = string.Empty;
         Url = string.Empty;
         Body = string.Empty;
-        Headers = new List<ApiHeader>();
-        Responses = new List<ApiResponse>();
-        TagLinks = new List<RequestTagMap>();
-        EnvironmentLinks = new List<RequestEnvironmentLink>();
+        Headers = new HashSet<ApiHeader>();
+        Responses = new HashSet<ApiResponse>();
+        TagLinks = new HashSet<RequestTagMap>();
+        EnvironmentLinks = new HashSet<RequestEnvironmentLink>();
     }
 }

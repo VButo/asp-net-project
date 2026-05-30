@@ -8,13 +8,13 @@ public class ApiCollection
     public DateTime CreatedAt { get; set; }
     public bool IsShared { get; set; }
     public int WorkspaceId { get; set; }
-    public ApiWorkspace? Workspace { get; set; }
-    public List<ApiRequest> Requests { get; set; }
+    public virtual ApiWorkspace? Workspace { get; set; }
+    public virtual ICollection<ApiRequest> Requests { get; set; }
 
     public ApiCollection()
     {
         Name = string.Empty;
         Description = string.Empty;
-        Requests = new List<ApiRequest>();
+        Requests = new HashSet<ApiRequest>();
     }
 }

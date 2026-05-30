@@ -15,26 +15,38 @@ public class RequestDetailsController : Controller
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Details(int requestId, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
+    [HttpGet("request-details")]
+    [HttpGet("request-details/{requestId:int}")]
+    public async Task<IActionResult> Details(int? requestId, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var request = await _context.ApiRequests
-            .Include(r => r.Collection)
-            .Include(r => r.Headers)
-            .Include(r => r.Responses)
-            .Include(r => r.TagLinks)
-                .ThenInclude(t => t.Tag)
-            .Include(r => r.EnvironmentLinks)
-                .ThenInclude(e => e.Environment)
-            .FirstOrDefaultAsync(r => r.Id == requestId);
+        var request = requestId.HasValue
+            ? await _context.Requests
+                .Include(r => r.Collection)
+                .Include(r => r.Headers)
+                .Include(r => r.Responses)
+                .Include(r => r.TagLinks)
+                    .ThenInclude(t => t.Tag)
+                .Include(r => r.EnvironmentLinks)
+                    .ThenInclude(e => e.Environment)
+                .FirstOrDefaultAsync(r => r.Id == requestId.Value)
+            : await _context.Requests
+                .Include(r => r.Collection)
+                .Include(r => r.Headers)
+                .Include(r => r.Responses)
+                .Include(r => r.TagLinks)
+                    .ThenInclude(t => t.Tag)
+                .Include(r => r.EnvironmentLinks)
+                    .ThenInclude(e => e.Environment)
+                .OrderBy(r => r.Id)
+                .FirstOrDefaultAsync();
         if (request == null)
         {
-            return NotFound();
+            return RedirectToAction("Index", "Request");
         }
 
         // If AJAX request, return partial for modal; otherwise full page

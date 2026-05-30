@@ -4,7 +4,7 @@ public class EnvironmentVariable
 {
     public int Id { get; set; }
     public int EnvironmentId { get; set; }
-    public ApiEnvironment? Environment { get; set; }
+    public virtual ApiEnvironment? Environment { get; set; }
     public string Key { get; set; }
     public string Value { get; set; }
     public bool IsSecret { get; set; }

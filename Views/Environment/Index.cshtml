@@ -1,4 +1,4 @@
-@model ApiWorkspace
+@model IEnumerable<ApiEnvironment>
 
 @{
     ViewData["Title"] = ViewData["Title"] ?? "Environments";
@@ -15,7 +15,7 @@
     <span>/</span>
     <a asp-area="" asp-controller="Workspaces" asp-action="Index">Workspaces</a>
     <span>/</span>
-    <a asp-area="" asp-controller="Workspaces" asp-action="Index">Workspaces</a>
+    <a asp-area="" asp-controller="Environment" asp-action="Index">Environments</a>
     <span>/</span>
     <strong>@breadcrumbCurrent</strong>
 </nav>
@@ -38,7 +38,7 @@
         <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Run Request</a>
     </div>
     <ul class="panel-list mono">
-        @foreach (var environment in Model.Environments)
+        @foreach (var environment in Model)
         {
             <li>
                 <strong>@environment.Name</strong>

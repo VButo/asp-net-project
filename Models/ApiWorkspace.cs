@@ -7,17 +7,17 @@ public class ApiWorkspace
     public string Description { get; set; }
     public DateTime CreatedAt { get; set; }
     public int OwnerUserId { get; set; }
-    public User? OwnerUser { get; set; }
-    public List<ApiCollection> Collections { get; set; }
-    public List<ApiEnvironment> Environments { get; set; }
-    public List<WorkspaceMembership> Members { get; set; }
+    public virtual User? OwnerUser { get; set; }
+    public virtual ICollection<ApiCollection> Collections { get; set; }
+    public virtual ICollection<ApiEnvironment> Environments { get; set; }
+    public virtual ICollection<WorkspaceMembership> Members { get; set; }
 
     public ApiWorkspace()
     {
         Name = string.Empty;
         Description = string.Empty;
-        Collections = new List<ApiCollection>();
-        Environments = new List<ApiEnvironment>();
-        Members = new List<WorkspaceMembership>();
+        Collections = new HashSet<ApiCollection>();
+        Environments = new HashSet<ApiEnvironment>();
+        Members = new HashSet<WorkspaceMembership>();
     }
 }

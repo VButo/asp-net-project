@@ -15,6 +15,8 @@ public class EnvironmentController : Controller
         _context = context;
     }
 
+    [HttpGet("environments")]
+    [HttpGet("environments/{workspaceId:int}")]
     public async Task<IActionResult> Index(int? workspaceId)
     {
         if (!ModelState.IsValid)
@@ -22,42 +24,50 @@ public class EnvironmentController : Controller
             return BadRequest(ModelState);
         }
 
-        ApiWorkspace? workspace = null;
+        var environmentsQuery = _context.Environments
+            .Include(e => e.Workspace)
+                .ThenInclude(w => w.OwnerUser)
+            .Include(e => e.Variables)
+            .AsQueryable();
 
         if (workspaceId.HasValue)
-            workspace = await _context.ApiWorkspaces
-                .Include(w => w.Environments)
-                    .ThenInclude(e => e.Variables)
+        {
+            environmentsQuery = environmentsQuery.Where(environment => environment.WorkspaceId == workspaceId.Value);
+            var workspace = await _context.Workspaces
                 .Include(w => w.OwnerUser)
                 .FirstOrDefaultAsync(w => w.Id == workspaceId.Value);
-        else
-            workspace = await _context.ApiWorkspaces
-                .Include(w => w.Environments)
-                    .ThenInclude(e => e.Variables)
-                .Include(w => w.OwnerUser)
-                .FirstOrDefaultAsync();
 
-        if (workspace == null)
-            return NotFound();
+            ViewData["WorkspaceName"] = workspace?.Name ?? "Workspace";
+            ViewData["BreadcrumbWorkspace"] = workspace?.Name ?? "Workspaces";
+        }
+        else
+        {
+            ViewData["WorkspaceName"] = "All Environments";
+            ViewData["BreadcrumbWorkspace"] = "Environments";
+        }
+
+        var environments = await environmentsQuery
+            .OrderBy(environment => environment.Name)
+            .ToListAsync();
 
         ViewData["Title"] = "Environments";
         ViewData["BreadcrumbCurrent"] = "Environments";
         ViewData["HeroKicker"] = "Environment Registry";
-        ViewData["HeroTitle"] = $"{workspace.Name} Environments";
+        ViewData["HeroTitle"] = ViewData["WorkspaceName"] as string ?? "All Environments";
         ViewData["HeroDescription"] = "Browse available environment configurations and jump straight into the Request Builder.";
         ViewData["PrimaryActionText"] = "Open Builder";
-        ViewData["SecondaryActionText"] = "Back to Workspace";
+        ViewData["SecondaryActionText"] = "Back to Workspaces";
 
-        return View(workspace);
+        return View(environments);
     }
 
-        [HttpPost]
+        [HttpPost("environments/save")]
         public async Task<IActionResult> Save(ApiEnvironment environment)
         {
             if (ModelState.IsValid)
             {
                 environment.CreatedAt = DateTime.Now;
-                _context.ApiEnvironments.Add(environment);
+                _context.Environments.Add(environment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new { workspaceId = environment.WorkspaceId });
             }

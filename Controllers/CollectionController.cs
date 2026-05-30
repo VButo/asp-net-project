@@ -15,9 +15,10 @@ public class CollectionController : Controller
         _context = context;
     }
 
+    [HttpGet("collections")]
     public async Task<IActionResult> Index()
     {
-        var collections = await _context.ApiCollections
+        var collections = await _context.Collections
             .Include(c => c.Workspace)
             .Include(c => c.Requests)
             .ToListAsync();
@@ -35,6 +36,7 @@ public class CollectionController : Controller
         return View(collections);
     }
 
+    [HttpGet("collections/{id:int}")]
     public async Task<IActionResult> Details(int id)
     {
         if (!ModelState.IsValid)
@@ -42,7 +44,7 @@ public class CollectionController : Controller
             return BadRequest(ModelState);
         }
 
-        var collection = await _context.ApiCollections
+        var collection = await _context.Collections
             .Include(c => c.Workspace)
             .Include(c => c.Requests)
                 .ThenInclude(r => r.Headers)
@@ -67,7 +69,7 @@ public class CollectionController : Controller
         return View(collection);
     }
 
-        [HttpPost]
+        [HttpPost("collections/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ApiCollection collection)
         {
@@ -77,7 +79,7 @@ public class CollectionController : Controller
             }
 
             collection.CreatedAt = DateTime.Now;
-            _context.ApiCollections.Add(collection);
+            _context.Collections.Add(collection);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id = collection.Id });

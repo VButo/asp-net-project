@@ -6,12 +6,12 @@ public class RequestTag
     public string Name { get; set; }
     public string ColorHex { get; set; }
     public DateTime CreatedAt { get; set; }
-    public List<RequestTagMap> RequestLinks { get; set; }
+    public virtual ICollection<RequestTagMap> RequestLinks { get; set; }
 
     public RequestTag()
     {
         Name = string.Empty;
         ColorHex = string.Empty;
-        RequestLinks = new List<RequestTagMap>();
+        RequestLinks = new HashSet<RequestTagMap>();
     }
 }

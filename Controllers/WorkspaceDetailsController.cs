@@ -14,7 +14,8 @@ public class WorkspaceDetailsController : Controller
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("workspace-details")]
+    [HttpGet("workspace-details/{workspaceId:int}")]
     public async Task<IActionResult> Details(int? workspaceId, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
     {
         if (!ModelState.IsValid)
@@ -25,13 +26,13 @@ public class WorkspaceDetailsController : Controller
         ApiWorkspace? workspace = null;
 
         if (workspaceId.HasValue)
-            workspace = await _context.ApiWorkspaces
+            workspace = await _context.Workspaces
                 .Include(w => w.Collections)
                 .Include(w => w.Environments)
                 .Include(w => w.OwnerUser)
                 .FirstOrDefaultAsync(w => w.Id == workspaceId.Value);
         else
-            workspace = await _context.ApiWorkspaces
+            workspace = await _context.Workspaces
                 .Include(w => w.Collections)
                 .Include(w => w.Environments)
                 .Include(w => w.OwnerUser)

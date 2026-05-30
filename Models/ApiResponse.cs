@@ -4,7 +4,7 @@ public class ApiResponse
 {
     public int Id { get; set; }
     public int RequestId { get; set; }
-    public ApiRequest? Request { get; set; }
+    public virtual ApiRequest? Request { get; set; }
     public int StatusCode { get; set; }
     public bool IsSuccess { get; set; }
     public DateTime ReceivedAt { get; set; }

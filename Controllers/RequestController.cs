@@ -15,9 +15,10 @@ public class RequestController : Controller
         _context = context;
     }
 
+    [HttpGet("requests")]
     public async Task<IActionResult> Index()
     {
-        var requests = await _context.ApiRequests
+        var requests = await _context.Requests
             .Include(r => r.Collection)
             .Include(r => r.Responses)
             .Include(r => r.TagLinks)

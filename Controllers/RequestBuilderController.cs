@@ -17,12 +17,13 @@ public class RequestBuilderController : Controller
 
     private async Task LoadCollectionsAsync()
     {
-        ViewBag.Collections = await _context.ApiCollections
+        ViewBag.Collections = await _context.Collections
             .OrderBy(c => c.Name)
             .ToListAsync();
     }
 
-    [HttpGet]
+    [HttpGet("request-builder")]
+    [HttpGet("request-builder/{requestId:int}")]
     public async Task<IActionResult> Index(int? requestId, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
     {
         if (!ModelState.IsValid)
@@ -33,7 +34,7 @@ public class RequestBuilderController : Controller
         ApiRequest? model = null;
 
         if (requestId.HasValue)
-            model = await _context.ApiRequests
+            model = await _context.Requests
                 .Include(r => r.Collection)
                 .Include(r => r.Headers)
                 .Include(r => r.TagLinks)
@@ -60,7 +61,7 @@ public class RequestBuilderController : Controller
         return View(model);
     }
 
-    [HttpPost]
+    [HttpPost("request-builder/save")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Save(ApiRequest request)
     {
@@ -69,11 +70,11 @@ public class RequestBuilderController : Controller
             if (request.Id == 0)
             {
                 request.CreatedAt = DateTime.Now;
-                _context.ApiRequests.Add(request);
+                _context.Requests.Add(request);
             }
             else
             {
-                var existingRequest = await _context.ApiRequests.FirstOrDefaultAsync(r => r.Id == request.Id);
+                var existingRequest = await _context.Requests.FirstOrDefaultAsync(r => r.Id == request.Id);
 
                 if (existingRequest == null)
                 {

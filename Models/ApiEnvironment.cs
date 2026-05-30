@@ -11,15 +11,15 @@ public class ApiEnvironment
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public int WorkspaceId { get; set; }
-    public ApiWorkspace? Workspace { get; set; }
-    public List<EnvironmentVariable> Variables { get; set; }
-    public List<RequestEnvironmentLink> RequestLinks { get; set; }
+    public virtual ApiWorkspace? Workspace { get; set; }
+    public virtual ICollection<EnvironmentVariable> Variables { get; set; }
+    public virtual ICollection<RequestEnvironmentLink> RequestLinks { get; set; }
 
     public ApiEnvironment()
     {
         Name = string.Empty;
         BaseUrl = string.Empty;
-        Variables = new List<EnvironmentVariable>();
-        RequestLinks = new List<RequestEnvironmentLink>();
+        Variables = new HashSet<EnvironmentVariable>();
+        RequestLinks = new HashSet<RequestEnvironmentLink>();
     }
 }
