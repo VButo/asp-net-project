@@ -9,109 +9,79 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = API_tester
 build_property.RootNamespace = API_tester
-build_property.ProjectDir = C:\Users\Home\Projects\API-tester\
+build_property.ProjectDir = C:\Users\Vedran DT\Downloads\shortterm\asp-net-project\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Home\Projects\API-tester
+build_property.MSBuildProjectDirectory = C:\Users\Vedran DT\Downloads\shortterm\asp-net-project
 build_property._RazorSourceGeneratorDebug = 
-build_property.EffectiveAnalysisLevelStyle = 8.0
-build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/Home/Projects/API-tester/Views/Collection/Details.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Collection/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Collection/Index.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Collection/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Environment/Index.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Environment/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW52aXJvbm1lbnRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Home/CollectionDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb2xsZWN0aW9uRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Home/Projects/API-tester/Views/Home/Collections.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb2xsZWN0aW9ucy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Home/Projects/API-tester/Views/Home/Index.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Home/Projects/API-tester/Views/Home/RequestBuilder.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZXF1ZXN0QnVpbGRlci5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Home/Projects/API-tester/Views/Home/RequestDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZXF1ZXN0RGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Home/Projects/API-tester/Views/Home/Requests.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZXF1ZXN0cy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Home/Projects/API-tester/Views/Home/WorkspaceDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxXb3Jrc3BhY2VEZXRhaWxzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Home/Projects/API-tester/Views/RequestBuilder/Index.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/RequestBuilder/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVxdWVzdEJ1aWxkZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/RequestBuilder/_RequestBuilder.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/RequestBuilder/_RequestBuilder.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVxdWVzdEJ1aWxkZXJcX1JlcXVlc3RCdWlsZGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/RequestDetails/Details.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/RequestDetails/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVxdWVzdERldGFpbHNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/RequestDetails/_RequestDetails.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/RequestDetails/_RequestDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVxdWVzdERldGFpbHNcX1JlcXVlc3REZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Request/Index.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Request/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVxdWVzdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Shared/Error.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/WorkspaceDetails/Details.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/WorkspaceDetails/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlRGV0YWlsc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/WorkspaceDetails/_WorkspaceDetails.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/WorkspaceDetails/_WorkspaceDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlRGV0YWlsc1xfV29ya3NwYWNlRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Workspaces/Index.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Workspaces/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/_ViewImports.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/_ViewStart.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Home/Projects/API-tester/Views/Shared/_Layout.cshtml]
+[C:/Users/Vedran DT/Downloads/shortterm/asp-net-project/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-tiy0snvme6

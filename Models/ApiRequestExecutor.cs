@@ -17,7 +17,7 @@ public class ApiRequestExecutor
 
         var response = new ApiResponse
         {
-            Id = Guid.NewGuid(),
+            Id = 0,
             RequestId = request.Id,
             Request = request,
             StatusCode = statusCode,

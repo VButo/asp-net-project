@@ -1,125 +1,97 @@
 using Microsoft.AspNetCore.Mvc;
 using API_tester.Models;
 using API_tester.Models.Enums;
+using API_tester.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_tester.Controllers;
 
 public class RequestBuilderController : Controller
 {
-    [HttpGet]
-    public IActionResult Index(Guid? requestId)
+    private readonly AppDbContext _context;
+
+    public RequestBuilderController(AppDbContext context)
     {
-        var requests = BuildRequests();
+        _context = context;
+    }
+
+    private async Task LoadCollectionsAsync()
+    {
+        ViewBag.Collections = await _context.ApiCollections
+            .OrderBy(c => c.Name)
+            .ToListAsync();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index(int? requestId, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         ApiRequest? model = null;
 
         if (requestId.HasValue)
-            model = requests.FirstOrDefault(r => r.Id == requestId.Value);
+            model = await _context.ApiRequests
+                .Include(r => r.Collection)
+                .Include(r => r.Headers)
+                .Include(r => r.TagLinks)
+                .FirstOrDefaultAsync(r => r.Id == requestId.Value);
+
+        await LoadCollectionsAsync();
 
         if (model == null)
         {
             model = new ApiRequest
             {
-                Id = Guid.NewGuid(),
                 Name = string.Empty,
                 Url = string.Empty,
                 Method = HttpMethodType.Get,
                 Body = string.Empty,
-                CreatedAt = DateTime.UtcNow
+                CollectionId = 0,
+                CreatedAt = DateTime.Now
             };
         }
 
-        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        if (requestedWith == "XMLHttpRequest")
             return PartialView("_RequestBuilder", model);
 
         return View(model);
     }
 
-    // Small demo builders used locally by the controller
-    private static List<ApiRequest> BuildRequests()
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Save(ApiRequest request)
     {
-        var ws = CreateWorkspace("Demo Workspace");
-        var coll = CreateCollection(ws, "Demo Collection");
-
-        return new List<ApiRequest>
+        if (ModelState.IsValid)
         {
-            CreateRequest(coll, "/demo/v1/items", HttpMethodType.Get, 200, true, 85, "demo", "smoke"),
-            CreateRequest(coll, "/demo/v1/items/{id}", HttpMethodType.Patch, 409, false, 320, "demo", "update")
-        };
-    }
-
-    private static ApiWorkspace CreateWorkspace(string name)
-    {
-        return new ApiWorkspace
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Description = $"{name} workspace",
-            CreatedAt = DateTime.UtcNow.AddDays(-40)
-        };
-    }
-
-    private static ApiCollection CreateCollection(ApiWorkspace workspace, string collectionName)
-    {
-        var collection = new ApiCollection
-        {
-            Id = Guid.NewGuid(),
-            Name = collectionName,
-            Description = $"{collectionName} endpoints",
-            CreatedAt = DateTime.UtcNow.AddDays(-20),
-            WorkspaceId = workspace.Id,
-            Workspace = workspace,
-            IsShared = true
-        };
-
-        workspace.Collections.Add(collection);
-        return collection;
-    }
-
-    private static ApiRequest CreateRequest(
-        ApiCollection collection,
-        string url,
-        HttpMethodType method,
-        int statusCode,
-        bool isSuccess,
-        long durationMs,
-        params string[] tags)
-    {
-        var request = new ApiRequest
-        {
-            Id = Guid.NewGuid(),
-            Name = url,
-            Url = url,
-            Method = method,
-            Body = string.Empty,
-            CreatedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(1, 15)),
-            CollectionId = collection.Id,
-            Collection = collection
-        };
-
-        foreach (var tagName in tags)
-        {
-            var tag = new RequestTag
+            if (request.Id == 0)
             {
-                Id = Guid.NewGuid(),
-                Name = tagName,
-                ColorHex = "#607D8B",
-                CreatedAt = DateTime.UtcNow.AddDays(-10)
-            };
-
-            var map = new RequestTagMap
+                request.CreatedAt = DateTime.Now;
+                _context.ApiRequests.Add(request);
+            }
+            else
             {
-                RequestId = request.Id,
-                Request = request,
-                TagId = tag.Id,
-                Tag = tag,
-                LinkedAt = DateTime.UtcNow
-            };
+                var existingRequest = await _context.ApiRequests.FirstOrDefaultAsync(r => r.Id == request.Id);
 
-            request.TagLinks.Add(map);
-            tag.RequestLinks.Add(map);
+                if (existingRequest == null)
+                {
+                    return NotFound();
+                }
+
+                existingRequest.Name = request.Name;
+                existingRequest.Url = request.Url;
+                existingRequest.Method = request.Method;
+                existingRequest.Body = request.Body;
+                existingRequest.CollectionId = request.CollectionId;
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "RequestBuilder", new { requestId = request.Id });
         }
 
-        collection.Requests.Add(request);
-        return request;
+        await LoadCollectionsAsync();
+        return View("Index", request);
     }
 }

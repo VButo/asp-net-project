@@ -34,7 +34,7 @@
 
 <section class="collections-toolbar" aria-label="Collection filters">
     <div class="collection-search">
-        <label for="collectionSearch">Pretraga</label>
+        <label for="collectionSearch">Search</label>
         <input id="collectionSearch" type="text" value="" placeholder="@searchPlaceholder" />
     </div>
     <div class="collection-filter-group">
@@ -58,7 +58,7 @@
                 <p><span>Workspace</span><strong>@(collection.Workspace?.Name ?? string.Empty)</strong></p>
                 <p><span>Requests</span><strong>@collection.Requests.Count</strong></p>
             </div>
-            <a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Details">Open Collection Details</a>
+            <a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Details" asp-route-id="@collection.Id">Open Collection Details</a>
         </article>
     }
 </section>

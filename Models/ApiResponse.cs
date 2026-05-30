@@ -2,8 +2,8 @@ namespace API_tester.Models;
 
 public class ApiResponse
 {
-    public Guid Id { get; set; }
-    public Guid RequestId { get; set; }
+    public int Id { get; set; }
+    public int RequestId { get; set; }
     public ApiRequest? Request { get; set; }
     public int StatusCode { get; set; }
     public bool IsSuccess { get; set; }

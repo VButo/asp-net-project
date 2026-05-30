@@ -5,9 +5,9 @@
 <section class="dashboard-hero">
     <div class="hero-copy">
         <p class="hero-kicker">Workspace Command Center</p>
-        <h1>Testiraj API flow bez prebacivanja izmedu alata.</h1>
+        <h1>Test API flows without switching between tools.</h1>
         <p class="hero-subtext">
-            Jedinstveni dashboard za workspaceove, kolekcije, requestove i environmente. Brz pregled svega sto je bitno prije slanja iduceg requesta.
+            A unified dashboard for workspaces, collections, requests, and environments. Get a fast overview of everything that matters before sending the next request.
         </p>
         <div class="hero-actions">
             <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="RequestBuilder" asp-action="Index">Open Request Builder</a>
@@ -66,27 +66,27 @@
 
 <section class="stats-grid" aria-label="Quick stats">
     <article class="stat-card">
-        <p>Total Workspaceova</p>
+        <p>Total Workspaces</p>
         <h2>07</h2>
-        <span>+2 ovaj tjedan</span>
+        <span>+2 this week</span>
         <a class="entity-link" asp-area="" asp-controller="Workspaces" asp-action="Index">Open Workspaces</a>
     </article>
     <article class="stat-card">
-        <p>Aktivne Collectione</p>
+        <p>Active Collections</p>
         <h2>19</h2>
-        <span>132 requesta mapirano</span>
+        <span>132 requests mapped</span>
         <a class="entity-link" asp-area="" asp-controller="Collection" asp-action="Index">Open Collections</a>
     </article>
     <article class="stat-card">
-        <p>Ukupno Requestova</p>
+        <p>Total Requests</p>
         <h2>246</h2>
-        <span>Last run: prije 2 min</span>
+        <span>Last run: 2 min ago</span>
         <a class="entity-link" asp-area="" asp-controller="Request" asp-action="Index">Open Requests</a>
     </article>
     <article class="stat-card">
-        <p>Aktivni Environment</p>
+        <p>Active Environment</p>
         <h2>staging-eu</h2>
-        <span>token validan jos 41 min</span>
+        <span>token valid for 41 more min</span>
         <a class="entity-link" asp-area="" asp-controller="Environment" asp-action="Index">Open Environments</a>
     </article>
 </section>
@@ -95,25 +95,25 @@
     <article class="flow-card">
         <p class="flow-step">01</p>
         <h3>Workspaces</h3>
-        <p>Odaberi timski kontekst i domenu API-ja koju testiras.</p>
+        <p>Choose the team context and the API domain you want to test.</p>
         <a asp-area="" asp-controller="Workspaces" asp-action="Index">Open Workspaces</a>
     </article>
     <article class="flow-card">
         <p class="flow-step">02</p>
         <h3>Collections</h3>
-        <p>Pregledaj endpoint grupe i mapirane scenarije po workspaceu.</p>
+        <p>Review endpoint groups and mapped scenarios by workspace.</p>
         <a asp-area="" asp-controller="Collection" asp-action="Index">Go to Collections</a>
     </article>
     <article class="flow-card">
         <p class="flow-step">03</p>
         <h3>Requests</h3>
-        <p>Filtriraj requestove po metodi, tagovima i zadnjem statusu.</p>
+        <p>Filter requests by method, tags, and latest status.</p>
         <a asp-area="" asp-controller="Request" asp-action="Index">Open Request List</a>
     </article>
     <article class="flow-card">
         <p class="flow-step">04</p>
         <h3>Request Builder</h3>
-        <p>Sastavi payload, odaberi environment i odmah pokreni poziv.</p>
+        <p>Compose the payload, choose an environment, and run the call immediately.</p>
         <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Launch Builder</a>
     </article>
 </section>
@@ -121,23 +121,23 @@
 <section class="dashboard-grid">
     <article class="dashboard-panel">
         <div class="panel-title-row">
-            <h3>Workspaceovi</h3>
+            <h3>Workspaces</h3>
             <a asp-area="" asp-controller="Workspaces" asp-action="Index">View all</a>
         </div>
         <ul class="panel-list">
             <li>
                 <strong>Payments Core</strong>
-                <span>6 collectiona · 48 requestova</span>
+                <span>6 collections · 48 requests</span>
                 <a href="#" class="entity-link open-workspace-details" data-workspace-id="11111111-1111-1111-1111-111111111111">Workspace Details</a>
             </li>
             <li>
                 <strong>Identity Gateway</strong>
-                <span>4 collectiona · 32 requesta</span>
+                <span>4 collections · 32 requests</span>
                 <a href="#" class="entity-link open-workspace-details" data-workspace-id="22222222-2222-2222-2222-222222222222">Workspace Details</a>
             </li>
             <li>
                 <strong>Billing Public API</strong>
-                <span>3 collectiona · 27 requestova</span>
+                <span>3 collections · 27 requests</span>
                 <a href="#" class="entity-link open-workspace-details" data-workspace-id="33333333-3333-3333-3333-333333333333">Workspace Details</a>
             </li>
         </ul>
@@ -145,7 +145,7 @@
 
     <article class="dashboard-panel">
         <div class="panel-title-row">
-            <h3>Collectione</h3>
+            <h3>Collections</h3>
             <a asp-area="" asp-controller="Collection" asp-action="Index">Open catalog</a>
         </div>
         <ul class="panel-list mono">
@@ -158,7 +158,7 @@
 
     <article class="dashboard-panel">
         <div class="panel-title-row">
-            <h3>Brze Akcije</h3>
+            <h3>Quick Actions</h3>
             <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Runner</a>
         </div>
         <div class="quick-actions">
@@ -171,7 +171,7 @@
 
     <article class="dashboard-panel">
         <div class="panel-title-row">
-            <h3>Aktivni Environment</h3>
+            <h3>Active Environment</h3>
             <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Switch in builder</a>
         </div>
         <div class="env-box">
