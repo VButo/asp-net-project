@@ -91,8 +91,21 @@ public class RequestBuilderController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "RequestBuilder", new { requestId = request.Id });
         }
-
         await LoadCollectionsAsync();
         return View("Index", request);
+    }
+
+    [HttpPost("request-builder/delete/{id:int}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var request = await _context.Requests.FindAsync(id);
+        if (request == null)
+            return NotFound();
+
+        _context.Requests.Remove(request);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Request");
     }
 }

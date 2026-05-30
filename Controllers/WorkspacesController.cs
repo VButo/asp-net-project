@@ -70,6 +70,64 @@ public class WorkspacesController : Controller
         return View(workspace);
     }
 
+    [HttpGet("workspaces/edit/{id:int}")]
+    public async Task<IActionResult> Edit(int id, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
+    {
+        var workspace = await _context.Workspaces.FindAsync(id);
+        if (workspace == null)
+            return NotFound();
+
+        if (requestedWith == "XMLHttpRequest")
+        {
+            ViewBag.Users = await _context.Users.OrderBy(user => user.Username).ToListAsync();
+            return PartialView("_WorkspaceEdit", workspace);
+        }
+
+        return View(workspace);
+    }
+
+    [HttpPost("workspaces/edit/{id:int}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, ApiWorkspace model)
+    {
+        if (id != model.Id)
+            return BadRequest();
+
+        var workspace = await _context.Workspaces.FindAsync(id);
+        if (workspace == null)
+            return NotFound();
+
+        if (ModelState.IsValid)
+        {
+            workspace.Name = model.Name;
+            workspace.Description = model.Description;
+            workspace.OwnerUserId = model.OwnerUserId;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(model);
+    }
+
+    [HttpPost("workspaces/delete/{id:int}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var workspace = await _context.Workspaces
+            .Include(w => w.Collections)
+            .Include(w => w.Environments)
+            .FirstOrDefaultAsync(w => w.Id == id);
+
+        if (workspace == null)
+            return NotFound();
+
+        // Simple delete: remove workspace (cascades depend on EF config)
+        _context.Workspaces.Remove(workspace);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
     private async Task<User?> ResolveCurrentUserAsync()
     {
         var identityName = User.Identity?.Name;

@@ -84,4 +84,60 @@ public class CollectionController : Controller
 
             return RedirectToAction(nameof(Details), new { id = collection.Id });
         }
+
+    [HttpGet("collections/edit/{id:int}")]
+    public async Task<IActionResult> Edit(int id, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
+    {
+        var collection = await _context.Collections.FindAsync(id);
+        if (collection == null)
+            return NotFound();
+
+        if (requestedWith == "XMLHttpRequest")
+        {
+            ViewBag.Workspaces = await _context.Workspaces.OrderBy(w => w.Name).ToListAsync();
+            return PartialView("_CollectionEdit", collection);
+        }
+
+        return View(collection);
+    }
+
+    [HttpPost("collections/edit/{id:int}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, ApiCollection model)
+    {
+        if (id != model.Id)
+            return BadRequest();
+
+        var collection = await _context.Collections.FindAsync(id);
+        if (collection == null)
+            return NotFound();
+
+        if (ModelState.IsValid)
+        {
+            collection.Name = model.Name;
+            collection.Description = model.Description;
+            collection.WorkspaceId = model.WorkspaceId;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id = collection.Id });
+        }
+
+        return View(model);
+    }
+
+    [HttpPost("collections/delete/{id:int}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var collection = await _context.Collections
+            .Include(c => c.Requests)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (collection == null)
+            return NotFound();
+
+        _context.Collections.Remove(collection);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
 }

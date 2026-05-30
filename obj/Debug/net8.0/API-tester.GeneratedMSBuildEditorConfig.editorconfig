@@ -24,12 +24,28 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Home/Projects/API-tester/Views/Collection/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Home/Projects/API-tester/Views/Collection/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Home/Projects/API-tester/Views/Collection/_CollectionEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxfQ29sbGVjdGlvbkVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Projects/API-tester/Views/Environment/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW52aXJvbm1lbnRcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Home/Projects/API-tester/Views/Environment/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW52aXJvbm1lbnRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Projects/API-tester/Views/Environment/_EnvironmentEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW52aXJvbm1lbnRcX0Vudmlyb25tZW50RWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Home/Projects/API-tester/Views/Home/Index.cshtml]
@@ -72,8 +88,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlRGV0YWlsc1xfV29ya3NwYWNlRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Home/Projects/API-tester/Views/Workspaces/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Home/Projects/API-tester/Views/Workspaces/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Projects/API-tester/Views/Workspaces/_WorkspaceEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlc1xfV29ya3NwYWNlRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Home/Projects/API-tester/Views/_ViewImports.cshtml]

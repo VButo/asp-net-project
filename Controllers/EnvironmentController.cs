@@ -62,15 +62,62 @@ public class EnvironmentController : Controller
     }
 
         [HttpPost("environments/save")]
-        public async Task<IActionResult> Save(ApiEnvironment environment)
-        {
-            if (ModelState.IsValid)
+            public async Task<IActionResult> Save(ApiEnvironment environment)
             {
-                environment.CreatedAt = DateTime.Now;
-                _context.Environments.Add(environment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { workspaceId = environment.WorkspaceId });
+                if (ModelState.IsValid)
+                {
+                    if (environment.Id == 0)
+                    {
+                        environment.CreatedAt = DateTime.Now;
+                        _context.Environments.Add(environment);
+                    }
+                    else
+                    {
+                        var existing = await _context.Environments.FindAsync(environment.Id);
+                        if (existing == null)
+                            return NotFound();
+
+                        existing.Name = environment.Name;
+                        existing.BaseUrl = environment.BaseUrl;
+                        existing.Type = environment.Type;
+                        existing.IsActive = environment.IsActive;
+                        existing.WorkspaceId = environment.WorkspaceId;
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index), new { workspaceId = environment.WorkspaceId });
+                }
+                return View("Index", environment);
             }
-            return View("Index", environment);
-        }
+
+            [HttpPost("environments/delete/{id:int}")]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Delete(int id)
+            {
+                var env = await _context.Environments
+                    .Include(e => e.Variables)
+                    .FirstOrDefaultAsync(e => e.Id == id);
+
+                if (env == null)
+                    return NotFound();
+
+                _context.Environments.Remove(env);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+    [HttpGet("environments/edit/{id:int}")]
+    public async Task<IActionResult> Edit(int id, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
+    {
+        var environment = await _context.Environments.FindAsync(id);
+        if (environment == null)
+            return NotFound();
+
+        if (requestedWith == "XMLHttpRequest")
+            return PartialView("_EnvironmentEdit", environment);
+
+        return View(environment);
+    }
+
 }

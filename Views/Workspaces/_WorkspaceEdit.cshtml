@@ -1,0 +1,41 @@
+@model API_tester.Models.ApiWorkspace
+
+@using API_tester.Models
+
+<form id="workspaceEditForm" asp-controller="Workspaces" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input class="form-control" name="Name" value="@Model.Name" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" name="Description">@Model.Description</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Owner</label>
+        <select class="form-select" name="OwnerUserId">
+            <option value="0">Select owner</option>
+            @foreach (var u in ViewBag.Users as IEnumerable<User> ?? Enumerable.Empty<User>())
+            {
+                if (u.Id == Model.OwnerUserId)
+                {
+                    <option value="@u.Id" selected="selected">@u.Username (@u.Email)</option>
+                }
+                else
+                {
+                    <option value="@u.Id">@u.Username (@u.Email)</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn app-btn app-btn-muted" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn app-btn app-btn-primary">Save</button>
+    </div>
+</form>
