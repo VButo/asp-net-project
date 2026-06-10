@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using API_tester.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 namespace API_tester.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<User, Microsoft.AspNetCore.Identity.IdentityRole<int>, int>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -17,7 +19,6 @@ public class AppDbContext : DbContext
     public DbSet<ApiEnvironment> Environments { get; set; }
     public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
     public DbSet<RequestTag> RequestTags { get; set; }
-    public DbSet<User> Users { get; set; }
 
     public DbSet<RequestTagMap> RequestTagMaps { get; set; }
     public DbSet<RequestEnvironmentLink> RequestEnvironmentLinks { get; set; }
@@ -73,12 +74,6 @@ public class AppDbContext : DbContext
             .HasForeignKey(m => m.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // User -> ApiWorkspace Owner (1-N)
-        modelBuilder.Entity<ApiWorkspace>()
-            .HasOne(w => w.OwnerUser)
-            .WithMany()
-            .HasForeignKey(w => w.OwnerUserId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         // ApiCollection -> ApiRequest (1-N)
         modelBuilder.Entity<ApiRequest>()

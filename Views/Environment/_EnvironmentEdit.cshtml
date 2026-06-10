@@ -2,21 +2,39 @@
 
 <form id="environmentEditForm" asp-controller="Environment" asp-action="Save" method="post">
     @Html.AntiForgeryToken()
-    <input type="hidden" name="Id" value="@Model.Id" />
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="CreatedAt" type="hidden" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input class="form-control" name="Name" value="@Model.Name" required />
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Base URL</label>
-        <input class="form-control" name="BaseUrl" value="@Model.BaseUrl" />
+        <label asp-for="WorkspaceId" class="form-label">Workspace</label>
+        <partial name="_Autocomplete" model="@(new API_tester.Models.AutocompleteModel {
+            InputId = Model.Id == 0 ? "environmentWorkspaceInputCreate" : $"environmentWorkspaceInput{Model.Id}",
+            HiddenId = "WorkspaceId",
+            SearchUrl = "/workspaces/search",
+            SelectedId = Model.WorkspaceId,
+            SelectedText = Model.Workspace?.Name ?? string.Empty,
+            Placeholder = "Search workspaces..."
+        })" />
+        <span asp-validation-for="WorkspaceId" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Type</label>
-        <select class="form-select" name="Type">
+        <label asp-for="BaseUrl" class="form-label"></label>
+        <input asp-for="BaseUrl" class="form-control" />
+        <span asp-validation-for="BaseUrl" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Type" class="form-label">Type</label>
+        <select asp-for="Type" class="form-select">
             @foreach (var t in Enum.GetValues(typeof(API_tester.Models.Enums.EnvironmentType)).Cast<API_tester.Models.Enums.EnvironmentType>())
             {
                 if (t == Model.Type)
@@ -29,6 +47,12 @@
                 }
             }
         </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
     </div>
 
     <div class="d-flex justify-content-end gap-2">
@@ -36,3 +60,73 @@
         <button type="submit" class="btn app-btn app-btn-primary">Save</button>
     </div>
 </form>
+
+@if (Model.Id > 0)
+{
+    <section class="nested-crud-panel mt-4">
+        <div class="panel-title-row">
+            <h3>Environment Variables</h3>
+        </div>
+
+        <form asp-controller="EnvironmentVariables" asp-action="Save" method="post" class="nested-crud-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="EnvironmentId" value="@Model.Id" />
+            <div class="nested-grid">
+                <label>
+                    <span>Key</span>
+                    <input name="Key" class="form-control" required maxlength="150" />
+                </label>
+                <label>
+                    <span>Value</span>
+                    <input name="Value" class="form-control" required maxlength="4000" />
+                </label>
+                <label class="form-check nested-check">
+                    <input name="IsSecret" value="true" type="checkbox" class="form-check-input" />
+                    <input name="IsSecret" value="false" type="hidden" />
+                    <span>Secret</span>
+                </label>
+                <label>
+                    <span>Updated</span>
+                    <partial name="_DateTimePicker" model="@(new API_tester.Models.DateTimePickerModel {
+                        InputId = $"newVariableUpdated{Model.Id}",
+                        InputName = "LastUpdatedAt",
+                        Value = DateTime.Now,
+                        Placeholder = "Date and time",
+                        Required = true
+                    })" />
+                </label>
+            </div>
+            <button type="submit" class="btn app-btn app-btn-primary mt-2">Add Variable</button>
+        </form>
+
+        <div class="nested-list">
+            @foreach (var variable in Model.Variables.OrderBy(v => v.Key))
+            {
+                <form asp-controller="EnvironmentVariables" asp-action="Save" method="post" class="nested-row">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id" value="@variable.Id" />
+                    <input type="hidden" name="EnvironmentId" value="@Model.Id" />
+                    <input name="Key" class="form-control" value="@variable.Key" required maxlength="150" />
+                    <input name="Value" class="form-control" value="@variable.Value" required maxlength="4000" />
+                    <label class="form-check nested-check">
+                        <input name="IsSecret" value="true" type="checkbox" class="form-check-input" checked="@variable.IsSecret" />
+                        <input name="IsSecret" value="false" type="hidden" />
+                        <span>Secret</span>
+                    </label>
+                    <partial name="_DateTimePicker" model="@(new API_tester.Models.DateTimePickerModel {
+                        InputId = $"variableUpdated{variable.Id}",
+                        InputName = "LastUpdatedAt",
+                        Value = variable.LastUpdatedAt == default ? DateTime.Now : variable.LastUpdatedAt,
+                        Placeholder = "Date and time",
+                        Required = true
+                    })" />
+                    <button type="submit" class="btn app-btn app-btn-muted">Save</button>
+                </form>
+                <form asp-controller="EnvironmentVariables" asp-action="Delete" asp-route-id="@variable.Id" method="post" class="nested-delete-form">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn app-btn app-btn-danger">Delete @variable.Key</button>
+                </form>
+            }
+        </div>
+    </section>
+}

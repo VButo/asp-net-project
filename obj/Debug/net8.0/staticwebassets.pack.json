@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\Home\\Projects\\API-tester\\wwwroot\\js\\autocomplete.js",
+      "PackagePath": "staticwebassets\\js\\autocomplete.js"
+    },
+    {
+      "Id": "C:\\Users\\Home\\Projects\\API-tester\\wwwroot\\js\\datetimepicker.js",
+      "PackagePath": "staticwebassets\\js\\datetimepicker.js"
+    },
+    {
       "Id": "C:\\Users\\Home\\Projects\\API-tester\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

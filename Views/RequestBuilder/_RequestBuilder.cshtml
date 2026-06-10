@@ -4,22 +4,29 @@
 @{
     var selectedMethod = Model.Method;
     var collections = ViewBag.Collections as IEnumerable<ApiCollection> ?? Enumerable.Empty<ApiCollection>();
+    var selectedEnvironment = Model.EnvironmentLinks.FirstOrDefault(link => link.IsDefaultEnvironment)?.Environment
+        ?? Model.EnvironmentLinks.FirstOrDefault()?.Environment;
+    var selectedTag = Model.TagLinks.FirstOrDefault()?.Tag;
+    var headers = Model.Headers.Any()
+        ? Model.Headers.OrderBy(h => h.Id).ToList()
+        : new List<ApiHeader> { new ApiHeader { IsEnabled = true } };
 }
 
 <form id="requestBuilderForm" class="request-builder-form" asp-area="" asp-controller="RequestBuilder" asp-action="Save" method="post">
     @Html.AntiForgeryToken()
-    <input type="hidden" name="Id" value="@Model.Id" />
+    <input asp-for="Id" type="hidden" />
 
     <section class="runner-request-head" aria-label="HTTP request setup">
         <label class="runner-field" for="requestName">
             <span>Request Name</span>
-            <input id="requestName" name="Name" value="@Model.Name" placeholder="Create user" />
+            <input asp-for="Name" id="requestName" class="form-control" placeholder="Request name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </label>
 
         <div class="runner-method-url">
             <label class="runner-field" for="requestMethod">
                 <span>Method</span>
-                <select id="requestMethod" name="Method">
+                <select asp-for="Method" id="requestMethod" class="form-select">
                     @foreach (var method in Enum.GetValues(typeof(API_tester.Models.Enums.HttpMethodType)).Cast<API_tester.Models.Enums.HttpMethodType>())
                     {
                         if (method == selectedMethod)
@@ -32,41 +39,52 @@
                         }
                     }
                 </select>
+                <span asp-validation-for="Method" class="text-danger"></span>
             </label>
 
             <label class="runner-field runner-url-field" for="requestUrl">
                 <span>Request URL</span>
-                <input id="requestUrl" name="Url" value="@Model.Url" placeholder="https://api.example.com/v1/resource" />
+                <input asp-for="Url" id="requestUrl" class="form-control" placeholder="https://api.example.com/v1/resource" />
+                <span asp-validation-for="Url" class="text-danger"></span>
             </label>
         </div>
 
-        <label class="runner-field" for="requestCollection">
+        <label class="runner-field" for="requestCollectionInput">
             <span>Collection</span>
-            <select id="requestCollection" name="CollectionId">
-                <option value="0">Select a collection</option>
-                @foreach (var collection in collections)
-                {
-                    if (collection.Id == Model.CollectionId)
-                    {
-                        <option value="@collection.Id" selected="selected">@collection.Name</option>
-                    }
-                    else
-                    {
-                        <option value="@collection.Id">@collection.Name</option>
-                    }
-                }
-            </select>
+            <partial name="_Autocomplete" model="@(new API_tester.Models.AutocompleteModel {
+                InputId = "requestCollectionInput",
+                HiddenId = "CollectionId",
+                SearchUrl = "/collections/search",
+                SelectedId = Model.CollectionId,
+                SelectedText = Model.Collection?.Name ?? string.Empty,
+                Placeholder = "Search collections..."
+            })" />
+            <span asp-validation-for="CollectionId" class="text-danger"></span>
         </label>
 
         <div class="runner-controls-row">
-            <label class="runner-field runner-env-field" for="requestEnvironment">
+            <label class="runner-field runner-env-field" for="requestEnvironmentInput">
                 <span>Environment</span>
-                <select id="requestEnvironment" name="Environment">
-                    <option value="staging-eu" selected="selected">staging-eu</option>
-                    <option value="staging-us">staging-us</option>
-                    <option value="prod-readonly">prod-readonly</option>
-                    <option value="local-dev">local-dev</option>
-                </select>
+                <partial name="_Autocomplete" model="@(new API_tester.Models.AutocompleteModel {
+                    InputId = "requestEnvironmentInput",
+                    HiddenId = "EnvironmentId",
+                    SearchUrl = "/environments/search",
+                    SelectedId = selectedEnvironment?.Id ?? 0,
+                    SelectedText = selectedEnvironment?.Name ?? string.Empty,
+                    Placeholder = "Search environments..."
+                })" />
+            </label>
+
+            <label class="runner-field runner-env-field" for="requestTagInput">
+                <span>Tag</span>
+                <partial name="_Autocomplete" model="@(new API_tester.Models.AutocompleteModel {
+                    InputId = "requestTagInput",
+                    HiddenId = "TagId",
+                    SearchUrl = "/tags/search",
+                    SelectedId = selectedTag?.Id ?? 0,
+                    SelectedText = selectedTag?.Name ?? string.Empty,
+                    Placeholder = "Search tags..."
+                })" />
             </label>
 
             <div class="builder-request-actions">
@@ -94,14 +112,26 @@
             <article class="editor-card">
                 <header>
                     <h2>Headers</h2>
-                    <span>4 active</span>
+                    <span>@headers.Count(h => h.IsEnabled) active</span>
                 </header>
-                <div class="kv-list">
-                    <div><span>Content-Type</span><strong>application/json</strong></div>
-                    <div><span>Authorization</span><strong>Bearer {{access_token}}</strong></div>
-                    <div><span>X-Correlation-Id</span><strong>{{trace_id}}</strong></div>
-                    <div><span>X-Channel</span><strong>web-checkout</strong></div>
+                <div class="header-editor-list" id="headerEditorList">
+                    @for (var i = 0; i < headers.Count; i++)
+                    {
+                        <div class="header-editor-row">
+                            <input type="hidden" name="Headers[@i].Id" value="@headers[i].Id" />
+                            <input type="hidden" name="Headers[@i].RequestId" value="@Model.Id" />
+                            <input name="Headers[@i].Key" class="form-control" value="@headers[i].Key" placeholder="Header key" maxlength="150" />
+                            <input name="Headers[@i].Value" class="form-control" value="@headers[i].Value" placeholder="Header value" maxlength="2000" />
+                            <label class="form-check">
+                                <input name="Headers[@i].IsEnabled" value="true" type="checkbox" class="form-check-input" checked="@headers[i].IsEnabled" />
+                                <input name="Headers[@i].IsEnabled" value="false" type="hidden" />
+                                <span>On</span>
+                            </label>
+                            <button type="button" class="btn app-btn app-btn-muted remove-header-row">Remove</button>
+                        </div>
+                    }
                 </div>
+                <button type="button" class="btn app-btn app-btn-muted add-header-row" data-next-index="@headers.Count">Add Header</button>
             </article>
 
             <article class="editor-card body-card">
@@ -109,7 +139,12 @@
                     <h2>Body (JSON)</h2>
                     <span>raw</span>
                 </header>
-                <textarea name="Body" rows="14" spellcheck="false">@(string.IsNullOrWhiteSpace(Model.Body) ? "{\n  \"template\": \"payment-received\",\n  \"locale\": \"en-US\"\n}" : Model.Body)</textarea>
+                @{
+                    var defaultBody = string.IsNullOrWhiteSpace(Model.Body)
+                        ? "{\n  \"template\": \"payment-received\",\n  \"locale\": \"en-US\"\n}"
+                        : Model.Body;
+                }
+                <textarea asp-for="Body" rows="14" spellcheck="false" class="form-control">@Html.Raw(defaultBody)</textarea>
             </article>
         </div>
     </section>

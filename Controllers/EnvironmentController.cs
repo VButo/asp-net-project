@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API_tester.Models;
 using API_tester.Models.Enums;
 using API_tester.Data;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_tester.Controllers;
 
+[Authorize]
 public class EnvironmentController : Controller
 {
     private readonly AppDbContext _context;
@@ -26,7 +28,6 @@ public class EnvironmentController : Controller
 
         var environmentsQuery = _context.Environments
             .Include(e => e.Workspace)
-                .ThenInclude(w => w.OwnerUser)
             .Include(e => e.Variables)
             .AsQueryable();
 
@@ -34,7 +35,6 @@ public class EnvironmentController : Controller
         {
             environmentsQuery = environmentsQuery.Where(environment => environment.WorkspaceId == workspaceId.Value);
             var workspace = await _context.Workspaces
-                .Include(w => w.OwnerUser)
                 .FirstOrDefaultAsync(w => w.Id == workspaceId.Value);
 
             ViewData["WorkspaceName"] = workspace?.Name ?? "Workspace";
@@ -59,6 +59,33 @@ public class EnvironmentController : Controller
         ViewData["SecondaryActionText"] = "Back to Workspaces";
 
         return View(environments);
+    }
+
+    [HttpGet("environments/search")]
+    public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
+    {
+        var term = (q ?? string.Empty).Trim();
+
+        IQueryable<ApiEnvironment> query = _context.Environments
+            .Include(e => e.Workspace)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(term))
+        {
+            query = query.Where(e => EF.Functions.Like(e.Name, $"%{term}%") || EF.Functions.Like(e.BaseUrl, $"%{term}%"));
+        }
+
+        var results = await query
+            .OrderBy(e => e.Name)
+            .Select(e => new {
+                e.Id,
+                e.Name,
+                e.BaseUrl,
+                Workspace = e.Workspace != null ? e.Workspace.Name : string.Empty
+            })
+            .ToListAsync();
+
+        return Json(results);
     }
 
         [HttpPost("environments/save")]

@@ -26,6 +26,7 @@
                     <li><a asp-area="" asp-controller="Request" asp-action="Index">Requests</a></li>
                     <li><a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Request Builder</a></li>
                     <li><a asp-area="" asp-controller="Environment" asp-action="Index">Environments</a></li>
+                    <li><a asp-area="" asp-controller="Tags" asp-action="Index">Tags</a></li>
                 </ul>
                 <div class="app-nav-actions">
                     <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Environment" asp-action="Index">Import</a>
@@ -49,7 +50,10 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/autocomplete.js" asp-append-version="true"></script>
+    <script src="~/js/datetimepicker.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API_tester.Models;
 using API_tester.Models.Enums;
 using API_tester.Data;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_tester.Controllers;
 
+[Authorize]
 public class RequestDetailsController : Controller
 {
     private readonly AppDbContext _context;

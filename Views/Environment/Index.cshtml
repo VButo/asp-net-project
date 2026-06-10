@@ -27,6 +27,7 @@
         <p>@heroDescription</p>
     </div>
     <div class="details-hero-actions">
+        <button type="button" class="btn app-btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#environmentCreateModal">New Environment</button>
         <a class="btn app-btn app-btn-primary" asp-area="" asp-controller="RequestBuilder" asp-action="Index">@primaryActionText</a>
         <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Workspaces" asp-action="Index">@secondaryActionText</a>
     </div>
@@ -37,6 +38,12 @@
         <h3>Environment List</h3>
         <a asp-area="" asp-controller="RequestBuilder" asp-action="Index">Run Request</a>
     </div>
+    <section class="environment-toolbar" aria-label="Environment filters">
+        <div class="environment-search">
+            <label for="environmentSearch">Search</label>
+            <input id="environmentSearch" type="text" value="" placeholder="Search environments" />
+        </div>
+    </section>
     <ul class="panel-list mono">
         @foreach (var environment in Model)
         {
@@ -50,6 +57,23 @@
         }
     </ul>
 </section>
+
+<div class="modal fade" id="environmentCreateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content collection-modal">
+            <div class="modal-header collection-modal-header">
+                <div>
+                    <p class="collection-modal-kicker">Environments</p>
+                    <h5 class="modal-title">New Environment</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body collection-modal-body">
+                <partial name="_EnvironmentEdit" model="@(new API_tester.Models.ApiEnvironment { IsActive = true })" />
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="environmentEditModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -92,12 +116,8 @@
                 var id = $(this).data('environment-id');
                 var url = '/Environment/edit/' + id;
                 $.get(url, function (html) {
-                    $('#environmentEditModal .modal-body').html(html);
-                    var modalEl = document.getElementById('environmentEditModal');
-                    if (modalEl && window.bootstrap) {
-                        var modal = new bootstrap.Modal(modalEl);
-                        modal.show();
-                    }
+                    if (window.injectModalHtml) window.injectModalHtml('#environmentEditModal .modal-body', html);
+                    else { $('#environmentEditModal .modal-body').html(html); var modalEl = document.getElementById('environmentEditModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
                 }).fail(function () { alert('Failed to load edit form'); });
             });
 

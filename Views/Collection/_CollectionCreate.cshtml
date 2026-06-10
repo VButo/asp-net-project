@@ -1,0 +1,37 @@
+@model API_tester.Models.ApiCollection
+
+<form id="collectionCreateForm" asp-controller="Collection" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="WorkspaceId" class="form-label">Workspace</label>
+        <partial name="_Autocomplete" model="@(new API_tester.Models.AutocompleteModel {
+            InputId = "collectionWorkspaceInput",
+            HiddenId = "WorkspaceId",
+            SearchUrl = "/workspaces/search",
+            SelectedId = Model.WorkspaceId,
+            SelectedText = Model.Workspace?.Name ?? string.Empty,
+            Placeholder = "Search workspaces..."
+        })" />
+        <span asp-validation-for="WorkspaceId" class="text-danger"></span>
+    </div>
+
+    <div class="modal-footer collection-modal-footer">
+        <button type="button" class="btn app-btn app-btn-muted" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn app-btn app-btn-primary">Create Collection</button>
+    </div>
+</form>

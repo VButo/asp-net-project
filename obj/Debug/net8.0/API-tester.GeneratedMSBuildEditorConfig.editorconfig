@@ -32,6 +32,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Home/Projects/API-tester/Views/Collection/_CollectionCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxfQ29sbGVjdGlvbkNyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Home/Projects/API-tester/Views/Collection/_CollectionEdit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvblxfQ29sbGVjdGlvbkVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -76,8 +80,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Home/Projects/API-tester/Views/Shared/_Autocomplete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BdXRvY29tcGxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Projects/API-tester/Views/Shared/_DateTimePicker.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9EYXRlVGltZVBpY2tlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Projects/API-tester/Views/Shared/_LoginPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Home/Projects/API-tester/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Projects/API-tester/Views/Tags/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFnc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Home/Projects/API-tester/Views/WorkspaceDetails/Details.cshtml]
@@ -94,6 +114,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Home/Projects/API-tester/Views/Workspaces/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Projects/API-tester/Views/Workspaces/_WorkspaceCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlc1xfV29ya3NwYWNlQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Home/Projects/API-tester/Views/Workspaces/_WorkspaceEdit.cshtml]

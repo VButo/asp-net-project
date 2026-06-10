@@ -8,7 +8,6 @@ public class WorkspaceMembership
     public virtual ApiWorkspace? Workspace { get; set; }
     public string MemberRole { get; set; }
     public DateTime JoinedAt { get; set; }
-    public bool IsOwner { get; set; }
 
     public WorkspaceMembership()
     {

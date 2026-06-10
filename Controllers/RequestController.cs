@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API_tester.Models;
 using API_tester.Models.Enums;
 using API_tester.Data;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_tester.Controllers;
 
+[Authorize]
 public class RequestController : Controller
 {
     private readonly AppDbContext _context;
@@ -42,5 +44,34 @@ public class RequestController : Controller
         ViewData["NotExecutedCount"] = requests.Count(r => !r.Responses.Any());
 
         return View(requests);
+    }
+
+    [HttpGet("requests/search")]
+    public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
+    {
+        var term = (q ?? string.Empty).Trim();
+
+        IQueryable<ApiRequest> query = _context.Requests
+            .Include(r => r.Collection)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(term))
+        {
+            query = query.Where(r => EF.Functions.Like(r.Name, $"%{term}%") || EF.Functions.Like(r.Url, $"%{term}%"));
+        }
+
+        var results = await query
+            .OrderBy(r => r.Name)
+            .Select(r => new {
+                id = r.Id,
+                name = r.Name,
+                description = r.Url,
+                url = r.Url,
+                method = r.Method.ToString(),
+                collection = r.Collection != null ? r.Collection.Name : string.Empty
+            })
+            .ToListAsync();
+
+        return Json(results);
     }
 }

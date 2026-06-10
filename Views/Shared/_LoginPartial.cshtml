@@ -1,0 +1,21 @@
+@using Microsoft.AspNetCore.Antiforgery
+@{
+}
+
+@if (User?.Identity?.IsAuthenticated == true)
+{
+    <div class="login-partial d-flex align-items-center">
+        <span class="me-2">Hello @User.Identity.Name</span>
+        <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="m-0">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-link p-0">Logout</button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="login-partial">
+        <a class="btn btn-link p-0 me-2" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="btn btn-link p-0" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </div>
+}

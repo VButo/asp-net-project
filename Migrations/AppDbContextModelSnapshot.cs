@@ -46,7 +46,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("ApiCollection", (string)null);
+                    b.ToTable("collections", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.ApiEnvironment", b =>
@@ -79,7 +79,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("ApiEnvironment", (string)null);
+                    b.ToTable("environments", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.ApiHeader", b =>
@@ -106,7 +106,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("RequestId");
 
-                    b.ToTable("ApiHeader", (string)null);
+                    b.ToTable("headers", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.ApiRequest", b =>
@@ -143,7 +143,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("CollectionId");
 
-                    b.ToTable("ApiRequest", (string)null);
+                    b.ToTable("requests", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.ApiResponse", b =>
@@ -178,7 +178,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("RequestId");
 
-                    b.ToTable("ApiResponse", (string)null);
+                    b.ToTable("responses", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.ApiWorkspace", b =>
@@ -198,14 +198,9 @@ namespace API_tester.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("OwnerUserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerUserId");
-
-                    b.ToTable("ApiWorkspace", (string)null);
+                    b.ToTable("workspaces", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.EnvironmentVariable", b =>
@@ -235,7 +230,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("EnvironmentId");
 
-                    b.ToTable("EnvironmentVariable", (string)null);
+                    b.ToTable("environmentvariables", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.RequestEnvironmentLink", b =>
@@ -256,7 +251,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("EnvironmentId");
 
-                    b.ToTable("RequestEnvironmentLink", (string)null);
+                    b.ToTable("requestenvironmentlink", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.RequestTag", b =>
@@ -278,7 +273,7 @@ namespace API_tester.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RequestTag", (string)null);
+                    b.ToTable("requesttag", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.RequestTagMap", b =>
@@ -296,7 +291,7 @@ namespace API_tester.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("RequestTagMap", (string)null);
+                    b.ToTable("requesttagmap", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.User", b =>
@@ -305,27 +300,73 @@ namespace API_tester.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
+                    b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.WorkspaceMembership", b =>
@@ -335,9 +376,6 @@ namespace API_tester.Migrations
 
                     b.Property<int>("WorkspaceId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsOwner")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("datetime(6)");
@@ -350,7 +388,133 @@ namespace API_tester.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("WorkspaceMembership", (string)null);
+                    b.ToTable("workspacemembership", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("API_tester.Models.ApiCollection", b =>
@@ -406,17 +570,6 @@ namespace API_tester.Migrations
                         .IsRequired();
 
                     b.Navigation("Request");
-                });
-
-            modelBuilder.Entity("API_tester.Models.ApiWorkspace", b =>
-                {
-                    b.HasOne("API_tester.Models.User", "OwnerUser")
-                        .WithMany()
-                        .HasForeignKey("OwnerUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("OwnerUser");
                 });
 
             modelBuilder.Entity("API_tester.Models.EnvironmentVariable", b =>
@@ -485,6 +638,57 @@ namespace API_tester.Migrations
                     b.Navigation("User");
 
                     b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.HasOne("API_tester.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.HasOne("API_tester.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API_tester.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.HasOne("API_tester.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("API_tester.Models.ApiCollection", b =>

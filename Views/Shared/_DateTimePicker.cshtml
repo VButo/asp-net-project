@@ -1,0 +1,24 @@
+@model API_tester.Models.DateTimePickerModel
+
+@{
+    var hiddenId = $"{Model.InputId}_value";
+    string hiddenValue = string.Empty;
+    if (Model.Value.HasValue)
+    {
+        var dt = Model.Value.Value;
+        hiddenValue = Model.ShowTime ? dt.ToString("yyyy-MM-ddTHH:mm") : dt.ToString("yyyy-MM-dd");
+    }
+}
+
+<div class="datetime-picker-control">
+    <input id="@Model.InputId"
+           type="text"
+           class="@Model.CssClass datetime-picker"
+           placeholder="@Model.Placeholder"
+           value=""
+           data-hidden-id="@hiddenId"
+           data-show-time="@Model.ShowTime.ToString().ToLowerInvariant()"
+           autocomplete="off"
+           @(Model.Required ? "required" : "") />
+    <input id="@hiddenId" name="@Model.InputName" type="hidden" value="@hiddenValue" />
+</div>

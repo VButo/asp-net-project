@@ -211,3 +211,6 @@ C:\Users\Home\Projects\API-tester\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysi
 C:\Users\Home\Projects\API-tester\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\API-tester.csproj.AssemblyReference.cache
 C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\API-tester.csproj.Up2Date
+C:\Users\Home\Projects\API-tester\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Home\Projects\API-tester\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
+C:\Users\Home\Projects\API-tester\obj\Debug\net8.0\API-tester.MvcApplicationPartsAssemblyInfo.cs

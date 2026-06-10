@@ -1,0 +1,16 @@
+@model API_tester.Models.AutocompleteModel
+
+<div class="autocomplete-control" style="position:relative;">
+    <input type="text"
+           id="@Model.InputId"
+           class="form-control autocomplete-input"
+           data-search-url="@Model.SearchUrl"
+           data-hidden-id="@Model.HiddenId"
+           placeholder="@Model.Placeholder"
+           value="@Model.SelectedText"
+           autocomplete="off" />
+
+    <input type="hidden" id="@Model.HiddenId" name="@Model.HiddenId" value="@Model.SelectedId" />
+
+    <div class="autocomplete-suggestions list-group" id="@($"{Model.InputId}_suggestions")" style="position:absolute; z-index:2000; display:none; width:100%; max-height:240px; overflow:auto;"></div>
+</div>

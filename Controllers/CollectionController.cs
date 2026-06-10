@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API_tester.Models;
 using API_tester.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_tester.Controllers;
 
+[Authorize]
 public class CollectionController : Controller
 {
 
@@ -21,6 +23,10 @@ public class CollectionController : Controller
         var collections = await _context.Collections
             .Include(c => c.Workspace)
             .Include(c => c.Requests)
+            .ToListAsync();
+
+        ViewBag.Workspaces = await _context.Workspaces
+            .OrderBy(workspace => workspace.Name)
             .ToListAsync();
 
         ViewData["Title"] = "Collections";
@@ -69,13 +75,42 @@ public class CollectionController : Controller
         return View(collection);
     }
 
+    [HttpGet("collections/search")]
+    public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
+    {
+        var term = (q ?? string.Empty).Trim();
+
+        IQueryable<ApiCollection> query = _context.Collections
+            .Include(c => c.Workspace)
+            .Include(c => c.Requests);
+
+        if (!string.IsNullOrEmpty(term))
+        {
+            query = query.Where(c => EF.Functions.Like(c.Name, $"%{term}%") || EF.Functions.Like(c.Description, $"%{term}%"));
+        }
+
+        var results = await query
+            .OrderBy(c => c.Name)
+            .Select(c => new {
+                id = c.Id,
+                name = c.Name,
+                description = c.Description,
+                isShared = c.IsShared,
+                workspace = c.Workspace != null ? c.Workspace.Name : string.Empty,
+                requests = c.Requests.Count
+            })
+            .ToListAsync();
+
+        return Json(results);
+    }
+
         [HttpPost("collections/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ApiCollection collection)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest(ModelState);
             }
 
             collection.CreatedAt = DateTime.Now;
@@ -88,7 +123,9 @@ public class CollectionController : Controller
     [HttpGet("collections/edit/{id:int}")]
     public async Task<IActionResult> Edit(int id, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
     {
-        var collection = await _context.Collections.FindAsync(id);
+        var collection = await _context.Collections
+            .Include(c => c.Workspace)
+            .FirstOrDefaultAsync(c => c.Id == id);
         if (collection == null)
             return NotFound();
 

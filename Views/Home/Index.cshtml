@@ -50,14 +50,10 @@
                                 var id = $(this).data('workspace-id');
                                 var url = '/WorkspaceDetails/Details' + (id ? ('?workspaceId=' + id) : '');
                                 $.get(url, function (html) {
-                                        $('#workspaceDetailsModal .modal-body').html(html);
-                                        var modalEl = document.getElementById('workspaceDetailsModal');
-                                        if (modalEl && window.bootstrap) {
-                                                var modal = new bootstrap.Modal(modalEl);
-                                                modal.show();
-                                        }
+                                    if (window.injectModalHtml) window.injectModalHtml('#workspaceDetailsModal .modal-body', html);
+                                    else { $('#workspaceDetailsModal .modal-body').html(html); var modalEl = document.getElementById('workspaceDetailsModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
                                 }).fail(function () {
-                                        alert('Failed to load workspace details');
+                                    alert('Failed to load workspace details');
                                 });
                         });
                 });

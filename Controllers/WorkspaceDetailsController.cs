@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API_tester.Models;
 using API_tester.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_tester.Controllers;
 
+[Authorize]
 public class WorkspaceDetailsController : Controller
 {
     private readonly AppDbContext _context;
@@ -29,13 +31,11 @@ public class WorkspaceDetailsController : Controller
             workspace = await _context.Workspaces
                 .Include(w => w.Collections)
                 .Include(w => w.Environments)
-                .Include(w => w.OwnerUser)
                 .FirstOrDefaultAsync(w => w.Id == workspaceId.Value);
         else
             workspace = await _context.Workspaces
                 .Include(w => w.Collections)
                 .Include(w => w.Environments)
-                .Include(w => w.OwnerUser)
                 .FirstOrDefaultAsync();
 
         if (workspace == null)

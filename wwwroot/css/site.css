@@ -399,6 +399,181 @@ a {
   color: #8ff4f6;
 }
 
+/* Autocomplete suggestions styling */
+.autocomplete-control { position: relative; }
+.autocomplete-control .autocomplete-input { width: 100%; }
+.autocomplete-suggestions {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.15rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+}
+.autocomplete-suggestions .list-group-item {
+  color: var(--text-main);
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+.autocomplete-suggestions .list-group-item .fw-bold { font-size: 0.95rem; }
+.autocomplete-suggestions .list-group-item .small { color: var(--text-soft); }
+.autocomplete-suggestions .list-group-item.active,
+.autocomplete-suggestions .list-group-item:hover {
+  background: rgba(255,255,255,0.03);
+  color: var(--text-main);
+}
+
+.app-btn-danger {
+  color: #fff1f3;
+  border-color: #7f3440;
+  background: #5f1a25;
+}
+
+.app-btn-danger:hover,
+.app-btn-danger:focus {
+  color: #fff;
+  border-color: #ad4d5d;
+  background: #792333;
+}
+
+.datetime-picker-control {
+  position: relative;
+}
+
+.datetime-picker-popup {
+  display: none;
+  position: absolute;
+  z-index: 3000;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: #0f1f2e;
+  color: var(--text-main);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+}
+
+.datetime-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(72px, 1fr));
+  gap: 0.5rem;
+}
+
+.datetime-picker-grid label,
+.nested-grid label {
+  display: grid;
+  gap: 0.25rem;
+  color: #8fb2ca;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.datetime-picker-grid input {
+  width: 100%;
+  border: 1px solid #345870;
+  border-radius: 8px;
+  background: #0b1721;
+  color: #e5f3ff;
+  padding: 0.42rem 0.5rem;
+}
+
+.datetime-picker-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+}
+
+.nested-crud-panel {
+  border: 1px solid #2a465d;
+  border-radius: 12px;
+  padding: 0.8rem;
+  background: rgba(12, 24, 33, 0.88);
+}
+
+.nested-crud-form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.nested-grid,
+.nested-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) minmax(160px, 1.2fr) auto minmax(190px, 0.9fr);
+  gap: 0.55rem;
+  align-items: end;
+}
+
+.nested-list,
+.tag-list {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.nested-row,
+.tag-row {
+  border: 1px solid #263f55;
+  border-radius: 10px;
+  padding: 0.58rem;
+  background: #0d1822;
+}
+
+.nested-delete-form {
+  margin: -0.35rem 0 0.5rem;
+}
+
+.nested-check {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #d6e8f5;
+  min-width: 82px;
+}
+
+.header-editor-list {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.55rem;
+}
+
+.header-editor-row {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.9fr) minmax(130px, 1fr) auto auto;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.header-editor-row .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0;
+  color: #d6e8f5;
+}
+
+.add-header-row {
+  margin: 0 0.55rem 0.55rem;
+}
+
+.tag-row {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tag-row.ajax-tag-row {
+  grid-template-columns: auto minmax(120px, 1fr) minmax(80px, auto) auto;
+  align-items: center;
+}
+
+.tag-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
 .flow-card a:hover,
 .flow-card a:focus {
   text-decoration: underline;
@@ -918,6 +1093,96 @@ a {
   font-size: 0.86rem;
   color: #ecf7ff;
   font-family: "JetBrains Mono", Consolas, monospace;
+}
+
+.collection-modal-dialog {
+  max-width: 640px;
+}
+
+.collection-modal {
+  border: 1px solid #29465c;
+  border-radius: 16px;
+  background: linear-gradient(165deg, rgba(14, 25, 35, 0.99), rgba(11, 21, 30, 0.97));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+.collection-modal-header {
+  border-bottom: 1px solid #2c4a5f;
+  background: transparent;
+  padding: 1rem 1rem 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.collection-modal-kicker {
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+.collection-modal-header .modal-title {
+  margin: 0;
+  color: #eef6fb;
+}
+
+.collection-modal-form {
+  display: contents;
+}
+
+.collection-modal-body,
+.collection-modal-footer {
+  padding: 1rem;
+}
+
+.collection-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.collection-modal-span-2 {
+  grid-column: span 2;
+}
+
+.collection-modal .form-label {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.76rem;
+  color: #87a8c0;
+}
+
+.collection-modal .form-control,
+.collection-modal .form-select {
+  background: #0d1620;
+  border-color: #274258;
+  color: #dceefe;
+}
+
+.collection-modal .form-control:focus,
+.collection-modal .form-select:focus {
+  border-color: #ffb97c;
+  box-shadow: 0 0 0 2px rgba(255, 185, 124, 0.14);
+}
+
+.collection-modal-footer {
+  border-top: 1px solid #2c4a5f;
+  background: transparent;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.collection-modal-note {
+  border: 1px solid #2c4a5f;
+  border-radius: 10px;
+  background: #0d1620;
+  color: #8faec4;
+  padding: 0.8rem 0.9rem;
+  font-size: 0.88rem;
 }
 
 .requests-hero {
@@ -1615,6 +1880,29 @@ a {
 .request-builder-form {
   display: grid;
   gap: 0.75rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem;
+  color: var(--text-main);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+/* Ensure standalone Request Builder form controls match modal dark theme */
+.request-builder-form .form-control,
+.request-builder-form .form-select {
+  background: var(--bg-panel-soft);
+  color: var(--text-main);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+}
+
+.request-builder-form .form-control:focus,
+.request-builder-form .form-select:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 6px rgba(19, 208, 212, 0.06);
 }
 
 .request-builder-form .runner-editor-panel {
@@ -1632,19 +1920,55 @@ a {
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 }
 
-.request-builder-modal-header {
+/* More specific selectors to override Bootstrap defaults without using !important */
+.modal.fade .modal-dialog .modal-content.request-builder-modal,
+.modal.fade .modal-dialog .modal-content.collection-modal {
+  background: var(--bg-panel);
+  background-image: linear-gradient(165deg, rgba(14, 25, 35, 0.99), rgba(11, 21, 30, 0.97));
+  color: var(--text-main);
+  border-radius: 16px;
+  border: 1px solid #29465c;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+.modal.fade .modal-dialog .modal-content.request-builder-modal .modal-header,
+.modal.fade .modal-dialog .modal-content.collection-modal .modal-header {
+  background: transparent;
+  color: var(--text-main);
   border-bottom: 1px solid #2c4a5f;
+}
+
+.modal.fade .modal-dialog .modal-content.request-builder-modal .btn-close,
+.modal.fade .modal-dialog .modal-content.collection-modal .btn-close {
+  filter: invert(1) grayscale(1) brightness(1.2);
+  opacity: 0.95;
+}
+
+.modal.fade .modal-dialog .modal-content.request-builder-modal .modal-body,
+.modal.fade .modal-dialog .modal-content.collection-modal .modal-body {
+  padding: 0.9rem;
   background: transparent;
   color: var(--text-main);
 }
 
-.request-builder-modal-header .btn-close {
-  filter: invert(1) grayscale(1) brightness(1.2);
-  opacity: 0.9;
+/* Form controls inside these modals should match the dark theme */
+.modal.fade .modal-dialog .modal-content.request-builder-modal .form-control,
+.modal.fade .modal-dialog .modal-content.collection-modal .form-control,
+.modal.fade .modal-dialog .modal-content.request-builder-modal .form-select,
+.modal.fade .modal-dialog .modal-content.collection-modal .form-select {
+  background: var(--bg-panel-soft);
+  color: var(--text-main);
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 
-.request-builder-modal-body {
-  padding: 0.9rem;
+.modal.fade .modal-dialog .modal-content.request-builder-modal .form-control:focus,
+.modal.fade .modal-dialog .modal-content.collection-modal .form-control:focus,
+.modal.fade .modal-dialog .modal-content.request-builder-modal .form-select:focus,
+.modal.fade .modal-dialog .modal-content.collection-modal .form-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 6px rgba(19, 208, 212, 0.06);
+  border-color: var(--cyan);
 }
 
 .request-builder-modal .runner-request-head {
@@ -1653,6 +1977,41 @@ a {
 
 .request-builder-modal .builder-secondary-btn {
   min-width: 0;
+}
+
+/* Extra strong overrides to prevent any Bootstrap default or other stylesheet
+   from showing a white modal background for the builder or collection modals. */
+.modal .modal-content.request-builder-modal,
+.modal .modal-content.collection-modal {
+  background: var(--bg-panel) !important;
+  background-image: linear-gradient(165deg, rgba(14, 25, 35, 0.99), rgba(11, 21, 30, 0.97)) !important;
+  color: var(--text-main) !important;
+  border-radius: 16px !important;
+  border: 1px solid #29465c !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55) !important;
+}
+
+.modal .modal-header.request-builder-modal-header,
+.modal .modal-header.collection-modal-header {
+  background: transparent !important;
+  color: var(--text-main) !important;
+  border-bottom: 1px solid #2c4a5f !important;
+}
+
+.modal .modal-body.request-builder-modal-body,
+.modal .modal-body.collection-modal-body {
+  background: transparent !important;
+  color: var(--text-main) !important;
+}
+
+/* Darken the backdrop so the surrounding page doesn't appear white through */
+.modal-backdrop.show {
+  background-color: rgba(2, 8, 12, 0.72) !important;
+}
+
+/* Backdrop color to avoid white flash on show */
+.modal-backdrop.show {
+  background-color: rgba(2, 6, 8, 0.65);
 }
 
 .response-tab.active {

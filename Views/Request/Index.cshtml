@@ -135,15 +135,15 @@
                 var id = $(this).data('request-id');
                 if (!id) return;
                 var url = '/RequestDetails/Details?requestId=' + id;
-                $.get(url, function (html) {
-                    $('#requestDetailsModal .modal-body').html(html);
-                    var modalEl = document.getElementById('requestDetailsModal');
-                    if (modalEl && window.bootstrap) {
-                        var modal = new bootstrap.Modal(modalEl);
-                        modal.show();
-                    }
-                }).fail(function () {
-                    alert('Failed to load request details');
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function (html) {
+                        if (window.injectModalHtml) window.injectModalHtml('#requestDetailsModal .modal-body', html);
+                        else { $('#requestDetailsModal .modal-body').html(html); var modalEl = document.getElementById('requestDetailsModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
+                    },
+                    error: function () { alert('Failed to load request details'); }
                 });
             });
 
@@ -152,15 +152,16 @@
                 e.preventDefault();
                 var id = $(this).data('request-id');
                 var url = '@Url.Action("Index", "RequestBuilder")' + (id ? ('?requestId=' + id) : '');
-                $.get(url, function (html) {
-                    $('#requestBuilderModal .modal-body').html(html);
-                    var modalEl = document.getElementById('requestBuilderModal');
-                    if (modalEl && window.bootstrap) {
-                        var modal = new bootstrap.Modal(modalEl);
-                        modal.show();
-                    }
-                }).fail(function () {
-                    alert('Failed to load request builder');
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    dataType: 'html',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function (html) {
+                        if (window.injectModalHtml) window.injectModalHtml('#requestBuilderModal .modal-body', html);
+                        else { $('#requestBuilderModal .modal-body').html(html); var modalEl = document.getElementById('requestBuilderModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
+                    },
+                    error: function () { alert('Failed to load request builder'); }
                 });
             });
         });
