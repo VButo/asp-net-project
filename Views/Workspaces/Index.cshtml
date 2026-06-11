@@ -6,9 +6,7 @@
     var heroTitle = ViewData["HeroTitle"] as string ?? string.Empty;
     var heroDescription = ViewData["HeroDescription"] as string ?? string.Empty;
     var primaryActionText = ViewData["PrimaryActionText"] as string ?? string.Empty;
-    var secondaryActionText = ViewData["SecondaryActionText"] as string ?? string.Empty;
     var searchPlaceholder = ViewData["SearchPlaceholder"] as string ?? string.Empty;
-    var filters = ViewData["Filters"] as List<string> ?? new List<string>();
 }
 
 <nav class="page-crumbs" aria-label="Breadcrumb">
@@ -25,7 +23,6 @@
     </div>
     <div class="workspaces-hero-actions">
         <button type="button" class="btn app-btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#workspaceCreateModal">@primaryActionText</button>
-        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Collection" asp-action="Index">@secondaryActionText</a>
     </div>
 </section>
 
@@ -33,12 +30,6 @@
     <div class="workspace-search">
         <label for="workspaceSearch">Search</label>
         <input id="workspaceSearch" type="text" value="" placeholder="@searchPlaceholder" />
-    </div>
-    <div class="workspace-filter-group">
-        @foreach (var filter in filters.Select((value, index) => new { value, index }))
-        {
-            <button class="filter-chip @(filter.index == 0 ? "active" : string.Empty)" type="button">@filter.value</button>
-        }
     </div>
 </section>
 
@@ -126,43 +117,6 @@
 @section Scripts {
     <script>
         $(function () {
-            // AJAX list search for workspaces
-            var wsTimer = null;
-            $('#workspaceSearch').on('input', function () {
-                var q = $(this).val() || '';
-                if (wsTimer) clearTimeout(wsTimer);
-                wsTimer = setTimeout(function () {
-                    $.getJSON('/workspaces/search', { q: q })
-                        .done(function (items) {
-                            var $grid = $('.workspaces-grid');
-                            if (!items || items.length === 0) {
-                                $grid.fadeOut(150, function () { $grid.html('<p class="text-muted">No workspaces found.</p>').fadeIn(150); });
-                                return;
-                            }
-                            var html = '';
-                            items.forEach(function (w) {
-                                var id = w.id || w.Id;
-                                var name = w.name || w.Name || '';
-                                var description = w.description || w.Description || '';
-                                var collections = w.collections || w.Collections || 0;
-                                var environments = w.environments || w.Environments || 0;
-                                html += '<article class="workspace-card">';
-                                html += '<div class="workspace-head"><h2>' + escapeHtml(name) + '</h2></div>';
-                                html += '<p class="workspace-description">' + escapeHtml(description || '') + '</p>';
-                                html += '<div class="workspace-metrics"><p><span>Collections</span><strong>' + collections + '</strong></p>';
-                                html += '<p><span>Environments</span><strong>' + environments + '</strong></p></div>';
-                                html += '<a href="#" class="entity-link open-workspace-details" data-workspace-id="' + id + '">Open Workspace Details</a>';
-                                html += '<a href="#" class="entity-link open-workspace-edit" data-workspace-id="' + id + '">Edit</a>';
-                                html += '<a href="#" class="entity-link open-workspace-delete" data-workspace-id="' + id + '">Delete</a>';
-                                html += '</article>';
-                            });
-                            $grid.fadeOut(120, function () { $grid.html(html).fadeIn(200); });
-                        });
-                }, 200);
-            });
-
-            function escapeHtml(s) { return String(s).replace(/[&<>"'`]/g, function (ch) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' })[ch]; }); }
-
             $('#workspaceCreateModal').on('shown.bs.modal', function () {
                 $('#workspaceName').trigger('focus');
             });
@@ -170,7 +124,7 @@
             $('.open-workspace-details').on('click', function (e) {
                 e.preventDefault();
                 var id = $(this).data('workspace-id');
-                var url = '/WorkspaceDetails/Details?workspaceId=' + id;
+                var url = '/workspace-details?workspaceId=' + id;
                 $.get(url, function (html) {
                     if (window.injectModalHtml) window.injectModalHtml('#workspaceDetailsModal .modal-body', html);
                     else { $('#workspaceDetailsModal .modal-body').html(html); var modalEl = document.getElementById('workspaceDetailsModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
@@ -182,7 +136,7 @@
             $('.open-workspace-edit').on('click', function (e) {
                 e.preventDefault();
                 var id = $(this).data('workspace-id');
-                var url = '/Workspaces/edit/' + id;
+                var url = '/workspaces/edit/' + id;
                 $.get(url, function (html) {
                     if (window.injectModalHtml) window.injectModalHtml('#workspaceEditModal .modal-body', html);
                     else { $('#workspaceEditModal .modal-body').html(html); var modalEl = document.getElementById('workspaceEditModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }

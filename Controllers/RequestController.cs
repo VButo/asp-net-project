@@ -18,6 +18,7 @@ public class RequestController : Controller
     }
 
     [HttpGet("requests")]
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var requests = await _context.Requests
@@ -47,6 +48,7 @@ public class RequestController : Controller
     }
 
     [HttpGet("requests/search")]
+    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();

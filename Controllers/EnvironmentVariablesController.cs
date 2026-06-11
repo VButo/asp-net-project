@@ -16,13 +16,41 @@ public class EnvironmentVariablesController : Controller
         _context = context;
     }
 
+    private bool IsAjaxRequest()
+    {
+        return Request.Headers.XRequestedWith == "XMLHttpRequest";
+    }
+
+    private async Task<ApiEnvironment?> LoadEnvironmentForEditAsync(int environmentId)
+    {
+        return await _context.Environments
+            .Include(e => e.Workspace)
+            .Include(e => e.Variables)
+            .FirstOrDefaultAsync(e => e.Id == environmentId);
+    }
+
     [HttpPost("environment-variables/save")]
+    [Authorize(Roles = "Admin,Manager")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Save(EnvironmentVariable variable)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var environment = await LoadEnvironmentForEditAsync(variable.EnvironmentId);
+            if (environment == null)
+            {
+                return NotFound();
+            }
+
+            ModelState.AddModelError(string.Empty, "Variable was not saved. Check the key, value, and updated date.");
+
+            if (IsAjaxRequest())
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return PartialView("~/Views/Environment/_EnvironmentEdit.cshtml", environment);
+            }
+
+            return View("~/Views/Environment/Edit.cshtml", environment);
         }
 
         var environmentExists = await _context.Environments.AnyAsync(e => e.Id == variable.EnvironmentId);
@@ -59,6 +87,7 @@ public class EnvironmentVariablesController : Controller
     }
 
     [HttpPost("environment-variables/delete/{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
@@ -75,4 +104,3 @@ public class EnvironmentVariablesController : Controller
         return RedirectToAction("Edit", "Environment", new { id = environmentId });
     }
 }
-

@@ -11,10 +11,17 @@ namespace API_tester.Controllers;
 public class RequestBuilderController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly ApiRequestExecutor _executor;
 
-    public RequestBuilderController(AppDbContext context)
+    public RequestBuilderController(AppDbContext context, ApiRequestExecutor executor)
     {
         _context = context;
+        _executor = executor;
+    }
+
+    private bool IsAjaxRequest()
+    {
+        return Request.Headers.XRequestedWith == "XMLHttpRequest";
     }
 
     private async Task LoadCollectionsAsync()
@@ -39,6 +46,7 @@ public class RequestBuilderController : Controller
             model = await _context.Requests
                 .Include(r => r.Collection)
                 .Include(r => r.Headers)
+                .Include(r => r.Responses)
                 .Include(r => r.TagLinks)
                     .ThenInclude(t => t.Tag)
                 .Include(r => r.EnvironmentLinks)
@@ -67,10 +75,19 @@ public class RequestBuilderController : Controller
     }
 
     [HttpPost("request-builder/save")]
+    [Authorize(Roles = "Admin,Manager")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Save(ApiRequest request, int? EnvironmentId, int? TagId)
     {
         RemoveBlankHeaderValidationErrors(request.Headers);
+        request.Body ??= string.Empty;
+        ModelState.Remove(nameof(ApiRequest.Body));
+        ModelState.Remove($"{nameof(request)}.{nameof(ApiRequest.Body)}");
+
+        // Capture posted headers separately and detach them from the incoming `request` object so
+        // EF won't attempt to insert navigation children (which may contain null/invalid `Key` values)
+        // during the initial SaveChanges. Headers are saved explicitly in SaveHeadersAsync below.
+        var postedHeaders = request.Headers?.ToList();
 
         if (ModelState.IsValid)
         {
@@ -78,6 +95,9 @@ public class RequestBuilderController : Controller
 
             if (request.Id == 0)
             {
+                // Ensure the request entity does not carry the posted header instances when adding
+                // so EF will not try to cascade-insert them.
+                request.Headers = new List<ApiHeader>();
                 request.CreatedAt = DateTime.Now;
                 _context.Requests.Add(request);
                 savedRequest = request;
@@ -98,21 +118,53 @@ public class RequestBuilderController : Controller
                 existingRequest.Name = request.Name;
                 existingRequest.Url = request.Url;
                 existingRequest.Method = request.Method;
-                existingRequest.Body = request.Body;
+                existingRequest.Body = request.Body ?? string.Empty;
                 existingRequest.CollectionId = request.CollectionId;
                 savedRequest = existingRequest;
             }
 
             await _context.SaveChangesAsync();
 
-            await SaveHeadersAsync(savedRequest.Id, request.Headers);
+            // Use the captured postedHeaders (detached) when persisting headers.
+            await SaveHeadersAsync(savedRequest.Id, postedHeaders);
             await SaveDefaultEnvironmentAsync(savedRequest.Id, EnvironmentId);
             await SaveSingleTagAsync(savedRequest.Id, TagId);
 
             return RedirectToAction("Index", "RequestBuilder", new { requestId = savedRequest.Id });
         }
         await LoadCollectionsAsync();
+
+        if (IsAjaxRequest())
+        {
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            return PartialView("_RequestBuilder", request);
+        }
+
         return View("Index", request);
+    }
+
+    [HttpPost("request-builder/run/{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Run(int id)
+    {
+        var request = await _context.Requests
+            .Include(r => r.Collection)
+            .Include(r => r.Headers)
+            .Include(r => r.Responses)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        if (request == null)
+        {
+            return NotFound();
+        }
+
+        request.Body ??= string.Empty;
+        var response = await _executor.ExecuteRequestAsync(request);
+        _context.Responses.Add(response);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index), new { requestId = request.Id });
     }
 
     private void RemoveBlankHeaderValidationErrors(IEnumerable<ApiHeader>? headers)
@@ -206,6 +258,7 @@ public class RequestBuilderController : Controller
     }
 
     [HttpPost("request-builder/delete/{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {

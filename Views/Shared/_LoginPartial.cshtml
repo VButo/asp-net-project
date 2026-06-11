@@ -1,21 +1,24 @@
-@using Microsoft.AspNetCore.Antiforgery
-@{
-}
-
 @if (User?.Identity?.IsAuthenticated == true)
 {
-    <div class="login-partial d-flex align-items-center">
-        <span class="me-2">Hello @User.Identity.Name</span>
-        <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="m-0">
-            @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-link p-0">Logout</button>
-        </form>
+    var displayName = User.Identity?.Name ?? "User";
+    var initial = displayName.Trim().Length > 0 ? displayName.Trim()[0].ToString().ToUpperInvariant() : "U";
+
+    <div class="dropdown user-menu">
+        <button class="user-menu-button" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open user menu">
+            <span class="user-avatar">@initial</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end user-menu-dropdown" aria-labelledby="userMenuButton">
+            <div class="user-menu-name">@displayName</div>
+            <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="dropdown-item user-menu-logout">Logout</button>
+            </form>
+        </div>
     </div>
 }
 else
 {
     <div class="login-partial">
-        <a class="btn btn-link p-0 me-2" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        <a class="btn btn-link p-0" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="btn app-btn app-btn-muted" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </div>
 }

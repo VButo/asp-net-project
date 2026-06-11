@@ -7,9 +7,7 @@
     var heroTitle = ViewData["HeroTitle"] as string ?? string.Empty;
     var heroDescription = ViewData["HeroDescription"] as string ?? string.Empty;
     var primaryActionText = ViewData["PrimaryActionText"] as string ?? string.Empty;
-    var secondaryActionText = ViewData["SecondaryActionText"] as string ?? string.Empty;
     var searchPlaceholder = ViewData["SearchPlaceholder"] as string ?? string.Empty;
-    var filters = ViewData["Filters"] as List<string> ?? new List<string>();
     var snapshotTitle = ViewData["SnapshotTitle"] as string ?? string.Empty;
     var successfulCount = ViewData["SuccessfulCount"] as int? ?? 0;
     var warningCount = ViewData["WarningCount"] as int? ?? 0;
@@ -34,7 +32,6 @@
     </div>
     <div class="requests-hero-actions">
         <a href="#" class="btn app-btn app-btn-primary open-request-builder" data-request-id="">@primaryActionText</a>
-        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="RequestBuilder" asp-action="Index">@secondaryActionText</a>
     </div>
 </section>
 
@@ -42,12 +39,6 @@
     <div class="request-search">
         <label for="requestSearch">Search</label>
         <input id="requestSearch" type="text" placeholder="@searchPlaceholder" />
-    </div>
-    <div class="request-filter-group">
-        @foreach (var filter in filters.Select((value, index) => new { value, index }))
-        {
-            <button class="request-chip @(filter.index == 0 ? "active" : string.Empty)" type="button">@filter.value</button>
-        }
     </div>
 </section>
 
@@ -60,14 +51,6 @@
             <li><span>Warnings</span><strong>@warningCount</strong></li>
             <li><span>Not Executed</span><strong>@notExecutedCount</strong></li>
         </ul>
-        @if (Model != null && Model.Any())
-        {
-            <a href="#" class="open-request-details" data-request-id="@Model.First().Id">Open Execution Timeline</a>
-        }
-        else
-        {
-            <a asp-area="" asp-controller="Request" asp-action="Index">Open Execution Timeline</a>
-        }
     </aside>
 
     <div class="requests-stream">
@@ -95,6 +78,10 @@
                     </div>
                 </div>
                 <p class="request-last-run @statusClass">@statusText</p>
+                <form asp-area="" asp-controller="RequestBuilder" asp-action="Run" asp-route-id="@request.Id" method="post" class="request-run-form">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn app-btn app-btn-primary">Run Request</button>
+                </form>
                 <a href="#" class="entity-link open-request-details" data-request-id="@request.Id">Open Request Details</a>
             </article>
         }
@@ -130,11 +117,11 @@
 @section Scripts {
     <script>
         $(function () {
-            $('.open-request-details').on('click', function (e) {
+            $(document).on('click', '.open-request-details', function (e) {
                 e.preventDefault();
                 var id = $(this).data('request-id');
                 if (!id) return;
-                var url = '/RequestDetails/Details?requestId=' + id;
+                var url = '/request-details?requestId=' + id;
                 $.ajax({
                     url: url,
                     method: 'GET',
@@ -148,7 +135,7 @@
             });
 
             // Open request builder modal (new or edit)
-            $('.open-request-builder').on('click', function (e) {
+            $(document).on('click', '.open-request-builder', function (e) {
                 e.preventDefault();
                 var id = $(this).data('request-id');
                 var url = '@Url.Action("Index", "RequestBuilder")' + (id ? ('?requestId=' + id) : '');

@@ -23,6 +23,7 @@ public class AppDbContext : IdentityDbContext<User, Microsoft.AspNetCore.Identit
     public DbSet<RequestTagMap> RequestTagMaps { get; set; }
     public DbSet<RequestEnvironmentLink> RequestEnvironmentLinks { get; set; }
     public DbSet<WorkspaceMembership> WorkspaceMemberships { get; set; }
+    public DbSet<RequestAttachment> RequestAttachments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +41,7 @@ public class AppDbContext : IdentityDbContext<User, Microsoft.AspNetCore.Identit
         modelBuilder.Entity<RequestTagMap>().ToTable("requesttagmap");
         modelBuilder.Entity<RequestEnvironmentLink>().ToTable("requestenvironmentlink");
         modelBuilder.Entity<WorkspaceMembership>().ToTable("workspacemembership");
+        modelBuilder.Entity<RequestAttachment>().ToTable("requestattachments");
 
         // Composite Keys
         modelBuilder.Entity<RequestTagMap>().HasKey(x => new { x.RequestId, x.TagId });
@@ -129,6 +131,12 @@ public class AppDbContext : IdentityDbContext<User, Microsoft.AspNetCore.Identit
             .HasOne(rel => rel.Request)
             .WithMany(r => r.EnvironmentLinks)
             .HasForeignKey(rel => rel.RequestId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<RequestAttachment>()
+            .HasOne(a => a.Request)
+            .WithMany(r => r.Attachments)
+            .HasForeignKey(a => a.RequestId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

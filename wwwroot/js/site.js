@@ -62,6 +62,37 @@ $(function () {
 		}
 	}
 
+	window.injectModalHtml = injectModalHtml;
+
+	function parseValidation($scope) {
+		try {
+			if (typeof $ !== 'undefined' && $.validator && $.validator.unobtrusive && typeof $.validator.unobtrusive.parse === 'function') {
+				$.validator.unobtrusive.parse($scope);
+			}
+		} catch (e) {
+			console.warn('validation parse failed', e);
+		}
+	}
+
+	function replaceAjaxForm($form, html) {
+		var $modalBody = $form.closest('.modal-body');
+		if ($modalBody.length) {
+			$modalBody.html(html);
+			parseValidation($modalBody);
+			$modalBody.find('.datetime-picker').each(function () {
+				$(this).trigger('input');
+			});
+			return;
+		}
+
+		var $incoming = $('<div>').html(html);
+		var $newForm = $incoming.find('form').first();
+		if ($newForm.length) {
+			$form.replaceWith($newForm);
+			parseValidation($newForm);
+		}
+	}
+
 	function renderCollections(items) {
 		var $grid = $('.collections-grid');
 		if (!$grid.length) return;
@@ -80,7 +111,7 @@ $(function () {
 			var isShared = pick(c, 'IsShared', 'isShared', false);
 			var workspace = pick(c, 'Workspace', 'workspace', '');
 			var requests = pick(c, 'Requests', 'requests', 0);
-			html += '<article class="collection-card">';
+			html += '<article class="collection-card" data-shared="' + (isShared ? 'true' : 'false') + '">';
 			html += '<div class="collection-head"><h2>' + escapeHtml(name) + '</h2>';
 			html += '<span class="collection-badge">' + (isShared ? 'Shared' : 'Private') + '</span></div>';
 			html += '<p class="collection-description">' + escapeHtml(description || '') + '</p>';
@@ -95,7 +126,9 @@ $(function () {
 		});
 
 		$grid.fadeOut(150, function () {
-			$grid.html(html).fadeIn(200);
+			$grid.html(html).fadeIn(200, function () {
+				$('.collection-filter-group .filter-chip.active').trigger('click');
+			});
 		});
 	}
 
@@ -137,7 +170,7 @@ $(function () {
 		$('.open-workspace-details').off('click').on('click', function (e) {
 			e.preventDefault();
 			var id = $(this).data('workspace-id');
-			var url = '/WorkspaceDetails/Details?workspaceId=' + id;
+			var url = '/workspace-details?workspaceId=' + id;
 			$.get(url, function (html) {
 				if (window.injectModalHtml) window.injectModalHtml('#workspaceDetailsModal .modal-body', html);
 				else { $('#workspaceDetailsModal .modal-body').html(html); var modalEl = document.getElementById('workspaceDetailsModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
@@ -147,7 +180,7 @@ $(function () {
 		$('.open-workspace-edit').off('click').on('click', function (e) {
 			e.preventDefault();
 			var id = $(this).data('workspace-id');
-			var url = '/Workspaces/edit/' + id;
+			var url = '/workspaces/edit/' + id;
 			$.get(url, function (html) {
 				if (window.injectModalHtml) window.injectModalHtml('#workspaceEditModal .modal-body', html);
 				else { $('#workspaceEditModal .modal-body').html(html); var modalEl = document.getElementById('workspaceEditModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
@@ -185,7 +218,7 @@ $(function () {
 			html += '<li>';
 			html += '<strong>' + escapeHtml(name) + '</strong>';
 			html += '<span>' + escapeHtml(baseUrl || '') + '</span>';
-			html += '<a class="entity-link" asp-area="" href="/RequestBuilder">Use in Builder</a>';
+			html += '<a class="entity-link" href="/request-builder">Use in Builder</a>';
 			html += '<a href="#" class="entity-link open-environment-edit" data-environment-id="' + id + '">Edit</a>';
 			html += '<a href="#" class="entity-link open-environment-delete" data-environment-id="' + id + '">Delete</a>';
 			html += '</li>';
@@ -199,7 +232,7 @@ $(function () {
 		$('.open-environment-edit').off('click').on('click', function (ev) {
 			ev.preventDefault();
 			var id = $(this).data('environment-id');
-			var url = '/Environment/edit/' + id;
+			var url = '/environments/edit/' + id;
 			$.get(url, function (html) {
 				if (window.injectModalHtml) window.injectModalHtml('#environmentEditModal .modal-body', html);
 				else { $('#environmentEditModal .modal-body').html(html); var modalEl = document.getElementById('environmentEditModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
@@ -230,8 +263,9 @@ $(function () {
 			return;
 		}
 
-		var html = '';
-		items.forEach(function (r) {
+			var html = '';
+			var token = $('input[name="__RequestVerificationToken"]').first().val() || '';
+			items.forEach(function (r) {
 			var id = pick(r, 'Id', 'id', '');
 			var name = pick(r, 'Name', 'name', '');
 			var url = pick(r, 'Url', 'url', pick(r, 'Description', 'description', ''));
@@ -248,6 +282,10 @@ $(function () {
 			html += '</div></div>';
 			html += '<a href="#" class="entity-link open-request-details" data-request-id="' + id + '">Open Request Details</a>';
 			html += '<a href="#" class="entity-link open-request-builder" data-request-id="' + id + '">Edit</a>';
+			html += '<form action="/request-builder/run/' + id + '" method="post" class="request-run-form">';
+			if (token) html += '<input name="__RequestVerificationToken" type="hidden" value="' + escapeHtml(token) + '" />';
+			html += '<button type="submit" class="btn app-btn app-btn-primary">Run Request</button>';
+			html += '</form>';
 			html += '<a href="#" class="entity-link open-request-delete" data-request-id="' + id + '">Delete</a>';
 			html += '</article>';
 		});
@@ -256,26 +294,63 @@ $(function () {
 			$stream.html(html).fadeIn(200);
 		});
 
-		// rebind details handler for new content
-		$('.open-request-details').off('click').on('click', function (e) {
-			e.preventDefault();
-			var id = $(this).data('request-id');
-			if (!id) return;
-			var url = '/RequestDetails/Details?requestId=' + id;
-			$.ajax({
-				url: url,
-				method: 'GET',
-				headers: { 'X-Requested-With': 'XMLHttpRequest' },
-				success: function (html) {
-					if (window.injectModalHtml) window.injectModalHtml('#requestDetailsModal .modal-body', html);
-					else { $('#requestDetailsModal .modal-body').html(html); var modalEl = document.getElementById('requestDetailsModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
-				},
-				error: function () { alert('Failed to load request details'); }
-			});
-		});
 	}
 
 	$(function () {
+		$(document).on('submit', 'form[data-ajax-validation="true"]', function (e) {
+			var $form = $(this);
+			if ($form.data('submitting')) return;
+
+			e.preventDefault();
+
+			if ($.validator && !$form.valid()) {
+				return;
+			}
+
+			$form.data('submitting', true);
+
+			$.ajax({
+				url: $form.attr('action') || window.location.href,
+				method: ($form.attr('method') || 'post').toUpperCase(),
+				data: $form.serialize(),
+				headers: { 'X-Requested-With': 'XMLHttpRequest' }
+			}).done(function (_html, _status, xhr) {
+				var responseUrl = xhr && xhr.responseURL ? xhr.responseURL : '';
+				var current = window.location.href.split('#')[0];
+				if (responseUrl && responseUrl.split('#')[0] !== current) {
+					window.location.href = responseUrl;
+					return;
+				}
+				window.location.reload();
+			}).fail(function (xhr) {
+				if (xhr && xhr.responseText) {
+					replaceAjaxForm($form, xhr.responseText);
+				}
+			}).always(function () {
+				$form.removeData('submitting');
+			});
+		});
+
+		$(document).on('input', '.nested-filter-input', function () {
+			var $input = $(this);
+			var term = String($input.val() || '').toLowerCase();
+			var targetSelector = $input.data('filter-target');
+			var rowSelector = $input.data('filter-row');
+			var $target = $(targetSelector);
+			if (!$target.length || !rowSelector) return;
+
+			$target.find(rowSelector).each(function () {
+				var $row = $(this);
+				var text = $row.text().toLowerCase();
+				var match = !term || text.indexOf(term) !== -1;
+				if (match) {
+					$row.stop(true, true).slideDown(120);
+				} else {
+					$row.stop(true, true).slideUp(120);
+				}
+			});
+		});
+
 		// collections search (existing)
 		var $cInput = $('#collectionSearch');
 		if ($cInput.length) {
@@ -290,7 +365,7 @@ $(function () {
 							$('.open-collection-edit').off('click').on('click', function (e) {
 								e.preventDefault();
 								var id = $(this).data('collection-id');
-								var url = '/Collection/edit/' + id;
+								var url = '/collections/edit/' + id;
 								$.get(url, function (html) {
 									if (window.injectModalHtml) window.injectModalHtml('#collectionEditModal .modal-body', html);
 									else { $('#collectionEditModal .modal-body').html(html); var modalEl = document.getElementById('collectionEditModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }
@@ -423,6 +498,145 @@ $(function () {
 
 		$(document).on('click', '.remove-header-row', function () {
 			$(this).closest('.header-editor-row').slideUp(120, function () { $(this).remove(); });
+		});
+
+		$(document).on('click', '.runner-tab', function () {
+			var $button = $(this);
+			var tab = $button.data('runner-tab');
+			if (!tab) return;
+			var $panel = $button.closest('.runner-editor-panel');
+			$panel.find('.runner-tab').removeClass('active');
+			$button.addClass('active');
+			$panel.find('.runner-tab-pane').removeClass('active');
+			$panel.find('[data-runner-pane="' + tab + '"]').addClass('active');
+		});
+
+		$(document).on('click', '.response-tab', function () {
+			var $button = $(this);
+			var tab = $button.data('response-tab');
+			if (!tab) return;
+			var $panel = $button.closest('.runner-right-panel');
+			$panel.find('.response-tab').removeClass('active');
+			$button.addClass('active');
+			$panel.find('.response-pane').removeClass('active');
+			$panel.find('[data-response-pane="' + tab + '"]').addClass('active');
+		});
+
+		$(document).on('click', '.collection-filter-group .filter-chip', function () {
+			var $button = $(this);
+			var filter = String($button.data('collection-filter') || 'all');
+			$('.collection-filter-group .filter-chip').removeClass('active');
+			$button.addClass('active');
+			$('.collections-grid .collection-card').each(function () {
+				var $card = $(this);
+				var isShared = String($card.data('shared')) === 'true';
+				var show = filter === 'all' || (filter === 'shared' && isShared) || (filter === 'private' && !isShared);
+				$card.stop(true, true)[show ? 'fadeIn' : 'fadeOut'](140);
+			});
+		});
+
+		function formatFileSize(bytes) {
+			var size = Number(bytes || 0);
+			if (size < 1024) return size + ' B';
+			if (size < 1024 * 1024) return (size / 1024).toFixed(1) + ' KB';
+			return (size / (1024 * 1024)).toFixed(1) + ' MB';
+		}
+
+		function renderAttachments(items) {
+			var $list = $('#requestAttachmentList');
+			if (!$list.length) return;
+			if (!items || items.length === 0) {
+				$list.fadeOut(120, function () {
+					$list.html('<p class="text-muted">No attachments yet.</p>').fadeIn(120);
+				});
+				return;
+			}
+
+			var html = '';
+			items.forEach(function (a) {
+				var id = pick(a, 'Id', 'id', '');
+				var fileName = pick(a, 'FileName', 'fileName', '');
+				var filePath = pick(a, 'FilePath', 'filePath', '#');
+				var contentType = pick(a, 'ContentType', 'contentType', '');
+				var fileSize = pick(a, 'FileSize', 'fileSize', 0);
+				html += '<article class="request-attachment-row" data-attachment-id="' + id + '">';
+				html += '<a href="' + escapeHtml(filePath) + '" target="_blank" rel="noopener">' + escapeHtml(fileName) + '</a>';
+				html += '<span>' + escapeHtml(contentType || 'file') + '</span>';
+				html += '<span>' + escapeHtml(formatFileSize(fileSize)) + '</span>';
+				html += '<button type="button" class="btn app-btn app-btn-danger delete-request-attachment" data-attachment-id="' + id + '">Delete</button>';
+				html += '</article>';
+			});
+
+			$list.fadeOut(120, function () {
+				$list.html(html).fadeIn(160);
+			});
+		}
+
+		function loadRequestAttachments() {
+			var $panel = $('.request-attachments-panel');
+			if (!$panel.length) return;
+			var requestId = $panel.data('request-id');
+			if (!requestId) return;
+			$.getJSON('/api/request-attachments', { requestId: requestId })
+				.done(renderAttachments)
+				.fail(function () {
+					$('#requestAttachmentList').html('<p class="text-danger">Attachments could not be loaded.</p>');
+				});
+		}
+
+		loadRequestAttachments();
+		$(document).on('shown.bs.modal', '.modal', loadRequestAttachments);
+
+		$(document).on('change', '#requestAttachmentInput', function () {
+			var input = this;
+			var requestId = $(input).data('request-id');
+			if (!requestId || !input.files || input.files.length === 0) return;
+
+			var files = Array.prototype.slice.call(input.files);
+			var uploadNext = function () {
+				var file = files.shift();
+				if (!file) {
+					input.value = '';
+					loadRequestAttachments();
+					$('.request-attachment-status').text('');
+					return;
+				}
+
+				var data = new FormData();
+				data.append('file', file);
+				$('.request-attachment-status').text('Uploading ' + file.name + '...');
+				$.ajax({
+					url: '/api/request-attachments/' + requestId,
+					method: 'POST',
+					data: data,
+					processData: false,
+					contentType: false
+				}).done(uploadNext)
+					.fail(function (xhr) {
+						var message = xhr && xhr.responseText ? xhr.responseText : 'Upload failed.';
+						$('.request-attachment-status').text(message);
+					});
+			};
+
+			uploadNext();
+		});
+
+		$(document).on('click', '.delete-request-attachment', function () {
+			var $button = $(this);
+			var id = $button.data('attachment-id');
+			if (!id) return;
+			$.ajax({ url: '/api/request-attachments/' + id, method: 'DELETE' })
+				.done(function () {
+					$button.closest('.request-attachment-row').slideUp(120, function () {
+						$(this).remove();
+						if ($('.request-attachment-row').length === 0) {
+							renderAttachments([]);
+						}
+					});
+				})
+				.fail(function () {
+					$('.request-attachment-status').text('Delete failed.');
+				});
 		});
 	});
 })();

@@ -2,10 +2,18 @@
 
 @{
     ViewData["Title"] = "Request Builder";
-    var requestMethod = string.IsNullOrWhiteSpace(Model?.Url) ? "POST" : Model.Method.ToString().ToUpperInvariant();
-    var requestUrl = string.IsNullOrWhiteSpace(Model?.Url) ? "https://staging.api.company.com/v1/notifications/dispatch" : Model.Url;
-    var collectionName = Model?.Collection?.Name ?? "Notification Dispatch";
-    var responseTitle = Model?.Responses.Any() == true ? "Latest Response" : "Sample Response";
+    var requestMethod = string.IsNullOrWhiteSpace(Model?.Url) ? "GET" : Model.Method.ToString().ToUpperInvariant();
+    var requestUrl = string.IsNullOrWhiteSpace(Model?.Url) ? "No URL selected" : Model.Url;
+    var collectionName = Model?.Collection?.Name ?? "No collection selected";
+    var latestResponse = Model?.Responses.OrderByDescending(response => response.ReceivedAt).FirstOrDefault();
+    var statusClass = latestResponse?.IsSuccess == true ? "success" : "warn";
+    var statusText = latestResponse == null
+        ? "Not executed yet"
+        : $"{latestResponse.StatusCode} {(latestResponse.IsSuccess ? "OK" : "response")} · {latestResponse.DurationMs} ms · {latestResponse.PayloadSizeBytes} B";
+    var executedText = latestResponse == null ? "Never" : latestResponse.ReceivedAt.ToLocalTime().ToString("g");
+    var responseBody = latestResponse?.ResponseBody ?? "{\n  \"message\": \"Save the request, then run it to see the real response here.\"\n}";
+    var requestHeaders = Model?.Headers.OrderBy(header => header.Key).ToList() ?? new List<API_tester.Models.ApiHeader>();
+    var timeline = Model?.Responses.OrderByDescending(response => response.ReceivedAt).Take(5).ToList() ?? new List<API_tester.Models.ApiResponse>();
 }
 
 <nav class="page-crumbs" aria-label="Breadcrumb">
@@ -25,9 +33,9 @@
         <p>The main screen for endpoint testing: method, URL, headers, body, environment, and response panel without switching between pages.</p>
     </div>
     <div class="runner-hero-stats">
-        <p><span>Current Environment</span><strong>staging-eu</strong></p>
+        <p><span>Current Environment</span><strong>Saved with request</strong></p>
         <p><span>Target Collection</span><strong>@collectionName</strong></p>
-        <p><span>Open Request</span><strong><a asp-area="" asp-controller="RequestDetails" asp-action="Details">@requestMethod @requestUrl</a></strong></p>
+        <p><span>Open Request</span><strong>@requestMethod @requestUrl</strong></p>
     </div>
 </section>
 
@@ -43,39 +51,53 @@
 
     <aside class="runner-right-panel" aria-label="Execution response">
         <div class="response-head">
-            <h2>@responseTitle</h2>
-            <p class="response-status success">202 Accepted · 121 ms · 1.3 KB</p>
+            <h2>Latest Response</h2>
+            <p class="response-status @statusClass">@statusText</p>
         </div>
 
         <div class="response-meta">
-            <p><span>Collection</span><strong><a asp-area="" asp-controller="Collection" asp-action="Details">@collectionName</a></strong></p>
-            <p><span>Request</span><strong><a asp-area="" asp-controller="RequestDetails" asp-action="Details">@requestMethod @requestUrl</a></strong></p>
-            <p><span>Executed At</span><strong>Today, 15:42:09</strong></p>
+            <p><span>Collection</span><strong><a asp-area="" asp-controller="Collection" asp-action="Details" asp-route-id="@Model!.CollectionId">@collectionName</a></strong></p>
+            <p><span>Request</span><strong><a asp-area="" asp-controller="RequestDetails" asp-action="Details" asp-route-requestId="@Model!.Id">@requestMethod @requestUrl</a></strong></p>
+            <p><span>Executed At</span><strong>@executedText</strong></p>
         </div>
 
         <div class="response-tabs">
-            <button type="button" class="response-tab active">Body</button>
-            <button type="button" class="response-tab">Headers</button>
-            <button type="button" class="response-tab">Timeline</button>
+            <button type="button" class="response-tab active" data-response-tab="body">Body</button>
+            <button type="button" class="response-tab" data-response-tab="headers">Headers</button>
+            <button type="button" class="response-tab" data-response-tab="timeline">Timeline</button>
         </div>
 
-        <pre class="response-body">{
-  "status": "queued",
-  "messageId": "msg_43f9121",
-  "channel": "email",
-  "delivery": {
-    "provider": "mailgun",
-    "estimatedIn": "2s"
-  },
-  "meta": {
-    "requestId": "req_aa12b9",
-    "traceId": "tr_22f991"
-  }
-}</pre>
+        <pre class="response-body response-pane active" data-response-pane="body">@responseBody</pre>
+        <div class="response-pane response-list-pane" data-response-pane="headers">
+            @if (requestHeaders.Count == 0)
+            {
+                <p>No request headers saved.</p>
+            }
+            else
+            {
+                @foreach (var header in requestHeaders)
+                {
+                    <p><span>@header.Key</span><strong>@header.Value</strong></p>
+                }
+            }
+        </div>
+        <div class="response-pane response-list-pane" data-response-pane="timeline">
+            @if (timeline.Count == 0)
+            {
+                <p>No executions yet.</p>
+            }
+            else
+            {
+                @foreach (var response in timeline)
+                {
+                    <p><span>@response.ReceivedAt.ToLocalTime().ToString("g")</span><strong>@response.StatusCode · @response.DurationMs ms</strong></p>
+                }
+            }
+        </div>
 
         <div class="runner-footer-links">
-            <a asp-area="" asp-controller="RequestDetails" asp-action="Details">Open Full Response Context</a>
-            <a asp-area="" asp-controller="Collection" asp-action="Details">Back to Collection</a>
+            <a asp-area="" asp-controller="RequestDetails" asp-action="Details" asp-route-requestId="@Model!.Id">Open Full Response Context</a>
+            <a asp-area="" asp-controller="Collection" asp-action="Details" asp-route-id="@Model!.CollectionId">Back to Collection</a>
             <a asp-area="" asp-controller="WorkspaceDetails" asp-action="Details">Back to Workspace</a>
         </div>
     </aside>

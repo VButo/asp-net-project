@@ -17,8 +17,30 @@ public class EnvironmentController : Controller
         _context = context;
     }
 
+    private bool IsAjaxRequest()
+    {
+        return Request.Headers.XRequestedWith == "XMLHttpRequest";
+    }
+
+    private async Task<ApiEnvironment> HydrateEnvironmentAsync(ApiEnvironment environment)
+    {
+        environment.Workspace = environment.WorkspaceId > 0
+            ? await _context.Workspaces.FirstOrDefaultAsync(w => w.Id == environment.WorkspaceId)
+            : null;
+
+        environment.Variables = environment.Id > 0
+            ? await _context.EnvironmentVariables
+                .Where(v => v.EnvironmentId == environment.Id)
+                .OrderBy(v => v.Key)
+                .ToListAsync()
+            : new List<EnvironmentVariable>();
+
+        return environment;
+    }
+
     [HttpGet("environments")]
     [HttpGet("environments/{workspaceId:int}")]
+    [AllowAnonymous]
     public async Task<IActionResult> Index(int? workspaceId)
     {
         if (!ModelState.IsValid)
@@ -62,6 +84,7 @@ public class EnvironmentController : Controller
     }
 
     [HttpGet("environments/search")]
+    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();
@@ -78,10 +101,11 @@ public class EnvironmentController : Controller
         var results = await query
             .OrderBy(e => e.Name)
             .Select(e => new {
-                e.Id,
-                e.Name,
-                e.BaseUrl,
-                Workspace = e.Workspace != null ? e.Workspace.Name : string.Empty
+                id = e.Id,
+                name = e.Name,
+                description = e.BaseUrl,
+                baseUrl = e.BaseUrl,
+                workspace = e.Workspace != null ? e.Workspace.Name : string.Empty
             })
             .ToListAsync();
 
@@ -89,6 +113,8 @@ public class EnvironmentController : Controller
     }
 
         [HttpPost("environments/save")]
+        [Authorize(Roles = "Admin,Manager")]
+        [ValidateAntiForgeryToken]
             public async Task<IActionResult> Save(ApiEnvironment environment)
             {
                 if (ModelState.IsValid)
@@ -114,10 +140,17 @@ public class EnvironmentController : Controller
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index), new { workspaceId = environment.WorkspaceId });
                 }
-                return View("Index", environment);
+                if (IsAjaxRequest())
+                {
+                    Response.StatusCode = StatusCodes.Status400BadRequest;
+                    return PartialView("_EnvironmentEdit", await HydrateEnvironmentAsync(environment));
+                }
+
+                return View("Edit", await HydrateEnvironmentAsync(environment));
             }
 
             [HttpPost("environments/delete/{id:int}")]
+            [Authorize(Roles = "Admin")]
             [ValidateAntiForgeryToken]
             public async Task<IActionResult> Delete(int id)
             {
@@ -135,9 +168,13 @@ public class EnvironmentController : Controller
             }
 
     [HttpGet("environments/edit/{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> Edit(int id, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
     {
-        var environment = await _context.Environments.FindAsync(id);
+        var environment = await _context.Environments
+            .Include(e => e.Workspace)
+            .Include(e => e.Variables)
+            .FirstOrDefaultAsync(e => e.Id == id);
         if (environment == null)
             return NotFound();
 

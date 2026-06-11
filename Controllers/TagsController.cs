@@ -16,7 +16,20 @@ public class TagsController : Controller
         _context = context;
     }
 
+    private async Task<IActionResult> TagsIndexWithValidationAsync()
+    {
+        var tags = await _context.RequestTags
+            .OrderBy(t => t.Name)
+            .ToListAsync();
+
+        ViewData["Title"] = "Tags";
+        ViewData["BreadcrumbCurrent"] = "Tags";
+        Response.StatusCode = StatusCodes.Status400BadRequest;
+        return View("Index", tags);
+    }
+
     [HttpGet("tags")]
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var tags = await _context.RequestTags
@@ -29,6 +42,7 @@ public class TagsController : Controller
     }
 
     [HttpGet("tags/search")]
+    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();
@@ -55,12 +69,13 @@ public class TagsController : Controller
     }
 
     [HttpPost("tags/save")]
+    [Authorize(Roles = "Admin,Manager")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Save(RequestTag tag)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            return await TagsIndexWithValidationAsync();
         }
 
         if (tag.CreatedAt == default)
@@ -90,6 +105,7 @@ public class TagsController : Controller
     }
 
     [HttpPost("tags/delete/{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
@@ -107,4 +123,3 @@ public class TagsController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
-

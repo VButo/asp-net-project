@@ -1,6 +1,6 @@
 @model API_tester.Models.ApiEnvironment
 
-<form id="environmentEditForm" asp-controller="Environment" asp-action="Save" method="post">
+<form id="environmentEditForm" asp-controller="Environment" asp-action="Save" method="post" data-ajax-validation="true">
     @Html.AntiForgeryToken()
     <input asp-for="Id" type="hidden" />
     <input asp-for="CreatedAt" type="hidden" />
@@ -68,9 +68,15 @@
             <h3>Environment Variables</h3>
         </div>
 
-        <form asp-controller="EnvironmentVariables" asp-action="Save" method="post" class="nested-crud-form">
+        <div class="nested-search">
+            <label for="environmentVariableSearch@(Model.Id)">Search Variables</label>
+            <input id="environmentVariableSearch@(Model.Id)" class="nested-filter-input" type="text" data-filter-target=".environment-variable-list" data-filter-row=".environment-variable-item" placeholder="Search by key or value" />
+        </div>
+
+        <form asp-controller="EnvironmentVariables" asp-action="Save" method="post" class="nested-crud-form" data-ajax-validation="true">
             @Html.AntiForgeryToken()
             <input type="hidden" name="EnvironmentId" value="@Model.Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="nested-grid">
                 <label>
                     <span>Key</span>
@@ -99,13 +105,14 @@
             <button type="submit" class="btn app-btn app-btn-primary mt-2">Add Variable</button>
         </form>
 
-        <div class="nested-list">
+        <div class="nested-list environment-variable-list">
             @foreach (var variable in Model.Variables.OrderBy(v => v.Key))
             {
-                <form asp-controller="EnvironmentVariables" asp-action="Save" method="post" class="nested-row">
+                <form asp-controller="EnvironmentVariables" asp-action="Save" method="post" class="nested-row environment-variable-item" data-ajax-validation="true">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="Id" value="@variable.Id" />
                     <input type="hidden" name="EnvironmentId" value="@Model.Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input name="Key" class="form-control" value="@variable.Key" required maxlength="150" />
                     <input name="Value" class="form-control" value="@variable.Value" required maxlength="4000" />
                     <label class="form-check nested-check">

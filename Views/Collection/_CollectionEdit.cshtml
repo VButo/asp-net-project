@@ -1,6 +1,6 @@
 @model API_tester.Models.ApiCollection
 
-<form id="collectionEditForm" asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+<form id="collectionEditForm" asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Id" method="post" data-ajax-validation="true">
     @Html.AntiForgeryToken()
     <input asp-for="Id" type="hidden" />
 

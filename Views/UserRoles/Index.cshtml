@@ -1,0 +1,60 @@
+@model API_tester.Models.UserRoleManagementViewModel
+
+@{
+    ViewData["Title"] = "User Roles";
+}
+
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <strong>User Roles</strong>
+</nav>
+
+<section class="details-hero">
+    <div>
+        <p class="details-kicker">Admin</p>
+        <h1>User Roles</h1>
+        <p>Assign Admin and Manager access without editing MySQL manually.</p>
+    </div>
+</section>
+
+@if (TempData["RoleMessage"] is string message)
+{
+    <div class="role-message">@message</div>
+}
+
+<section class="dashboard-panel">
+    <div class="panel-title-row">
+        <h3>Users</h3>
+        <span>Role changes require logout/login</span>
+    </div>
+
+    <div class="user-role-list">
+        @foreach (var user in Model.Users)
+        {
+            var activeRole = user.IdentityRoles.Contains("Admin")
+                ? "Admin"
+                : user.IdentityRoles.Contains("Manager")
+                    ? "Manager"
+                    : "Authenticated";
+
+            <article class="user-role-row">
+                <div>
+                    <strong>@user.Email</strong>
+                    <span>@(string.IsNullOrWhiteSpace(user.UserName) ? "No username" : user.UserName)</span>
+                    <span>Identity roles: @(user.IdentityRoles.Count == 0 ? "none" : string.Join(", ", user.IdentityRoles))</span>
+                </div>
+                <form asp-action="Update" asp-controller="UserRoles" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="UserId" value="@user.Id" />
+                    <select name="Role" class="form-select">
+                        <option value="Authenticated" selected="@(activeRole == "Authenticated")">Authenticated only</option>
+                        <option value="Manager" selected="@(activeRole == "Manager")">Manager</option>
+                        <option value="Admin" selected="@(activeRole == "Admin")">Admin</option>
+                    </select>
+                    <button type="submit" class="btn app-btn app-btn-primary">Save Role</button>
+                </form>
+            </article>
+        }
+    </div>
+</section>

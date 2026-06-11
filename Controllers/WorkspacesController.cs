@@ -17,6 +17,7 @@ public class WorkspacesController : Controller
     }
 
     [HttpGet("workspaces")]
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var workspaces = await _context.Workspaces
@@ -38,6 +39,7 @@ public class WorkspacesController : Controller
     }
 
     [HttpGet("workspaces/search")]
+    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();
@@ -64,6 +66,7 @@ public class WorkspacesController : Controller
     }
 
     [HttpPost("workspaces/create")]
+    [Authorize(Roles = "Admin,Manager")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ApiWorkspace workspace)
     {
@@ -79,6 +82,7 @@ public class WorkspacesController : Controller
     }
 
     [HttpGet("workspaces/edit/{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> Edit(int id, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
     {
         var workspace = await _context.Workspaces.FindAsync(id);
@@ -94,6 +98,7 @@ public class WorkspacesController : Controller
     }
 
     [HttpPost("workspaces/edit/{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, ApiWorkspace model)
     {
@@ -116,6 +121,7 @@ public class WorkspacesController : Controller
     }
 
     [HttpPost("workspaces/delete/{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {

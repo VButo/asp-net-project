@@ -1,0 +1,33 @@
+@page
+@model API_tester.Areas.Identity.Pages.Account.ExternalLoginModel
+@{
+    ViewData["Title"] = "External Login";
+}
+
+<section class="auth-panel">
+    <div class="auth-card">
+        <p class="auth-kicker">External Account</p>
+        <h1>Finish Registration</h1>
+        <form method="post" asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Input.Email" type="hidden" />
+            <label class="runner-field" asp-for="Input.Email">
+                <span>Email</span>
+                <input asp-for="Input.Email" class="form-control" disabled />
+            </label>
+            <label class="runner-field" asp-for="Input.OIB">
+                <span>OIB</span>
+                <input asp-for="Input.OIB" class="form-control" inputmode="numeric" maxlength="11" />
+                <span asp-validation-for="Input.OIB" class="text-danger"></span>
+            </label>
+            <label class="runner-field" asp-for="Input.JMBG">
+                <span>JMBG</span>
+                <input asp-for="Input.JMBG" class="form-control" inputmode="numeric" maxlength="13" />
+                <span asp-validation-for="Input.JMBG" class="text-danger"></span>
+            </label>
+            <button type="submit" class="runner-send-btn">Create Account</button>
+        </form>
+    </div>
+</section>
+
+<partial name="_ValidationScriptsPartial" />

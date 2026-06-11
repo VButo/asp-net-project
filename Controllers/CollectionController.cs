@@ -17,7 +17,22 @@ public class CollectionController : Controller
         _context = context;
     }
 
+    private bool IsAjaxRequest()
+    {
+        return Request.Headers.XRequestedWith == "XMLHttpRequest";
+    }
+
+    private async Task<ApiCollection> HydrateCollectionAsync(ApiCollection collection)
+    {
+        collection.Workspace = collection.WorkspaceId > 0
+            ? await _context.Workspaces.FirstOrDefaultAsync(w => w.Id == collection.WorkspaceId)
+            : null;
+
+        return collection;
+    }
+
     [HttpGet("collections")]
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var collections = await _context.Collections
@@ -76,6 +91,7 @@ public class CollectionController : Controller
     }
 
     [HttpGet("collections/search")]
+    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();
@@ -105,12 +121,19 @@ public class CollectionController : Controller
     }
 
         [HttpPost("collections/create")]
+        [Authorize(Roles = "Admin,Manager")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ApiCollection collection)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                if (IsAjaxRequest())
+                {
+                    Response.StatusCode = StatusCodes.Status400BadRequest;
+                    return PartialView("_CollectionCreate", await HydrateCollectionAsync(collection));
+                }
+
+                return RedirectToAction(nameof(Index));
             }
 
             collection.CreatedAt = DateTime.Now;
@@ -121,6 +144,7 @@ public class CollectionController : Controller
         }
 
     [HttpGet("collections/edit/{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> Edit(int id, [FromHeader(Name = "X-Requested-With")] string? requestedWith)
     {
         var collection = await _context.Collections
@@ -139,6 +163,7 @@ public class CollectionController : Controller
     }
 
     [HttpPost("collections/edit/{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, ApiCollection model)
     {
@@ -158,10 +183,17 @@ public class CollectionController : Controller
             return RedirectToAction(nameof(Details), new { id = collection.Id });
         }
 
+        if (IsAjaxRequest())
+        {
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            return PartialView("_CollectionEdit", await HydrateCollectionAsync(model));
+        }
+
         return View(model);
     }
 
     [HttpPost("collections/delete/{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {

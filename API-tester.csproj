@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>API_tester</RootNamespace>
+    <UserSecretsId>a1406b69-f1d6-4b57-8e27-d9088c9f8c54</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,14 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="API-tester.Tests\**" />
+    <Content Remove="API-tester.Tests\**" />
+    <EmbeddedResource Remove="API-tester.Tests\**" />
+    <None Remove="API-tester.Tests\**" />
   </ItemGroup>
 
 </Project>

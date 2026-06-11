@@ -114,7 +114,7 @@
             $('.open-environment-edit').on('click', function (e) {
                 e.preventDefault();
                 var id = $(this).data('environment-id');
-                var url = '/Environment/edit/' + id;
+                var url = '/environments/edit/' + id;
                 $.get(url, function (html) {
                     if (window.injectModalHtml) window.injectModalHtml('#environmentEditModal .modal-body', html);
                     else { $('#environmentEditModal .modal-body').html(html); var modalEl = document.getElementById('environmentEditModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }

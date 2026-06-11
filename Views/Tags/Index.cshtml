@@ -35,10 +35,12 @@
             <label class="runner-field">
                 <span>Name</span>
                 <input name="Name" class="form-control" required maxlength="80" />
+                <span data-valmsg-for="Name" class="text-danger"></span>
             </label>
             <label class="runner-field">
                 <span>Color</span>
                 <input name="ColorHex" type="color" class="form-control form-control-color" value="@newTag.ColorHex" />
+                <span data-valmsg-for="ColorHex" class="text-danger"></span>
             </label>
             <label class="runner-field">
                 <span>Created</span>
@@ -75,9 +77,11 @@
             <article class="tag-row">
                 <form asp-controller="Tags" asp-action="Save" method="post" class="nested-row">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="Id" value="@tag.Id" />
-                    <input name="Name" class="form-control" value="@tag.Name" required maxlength="80" />
-                    <input name="ColorHex" type="color" class="form-control form-control-color" value="@tag.ColorHex" />
+                <input type="hidden" name="Id" value="@tag.Id" />
+                <input name="Name" class="form-control" value="@tag.Name" required maxlength="80" />
+                <span data-valmsg-for="Name" class="text-danger"></span>
+                <input name="ColorHex" type="color" class="form-control form-control-color" value="@tag.ColorHex" />
+                <span data-valmsg-for="ColorHex" class="text-danger"></span>
                     <partial name="_DateTimePicker" model="@(new API_tester.Models.DateTimePickerModel {
                         InputId = $"tagCreatedAt{tag.Id}",
                         InputName = "CreatedAt",

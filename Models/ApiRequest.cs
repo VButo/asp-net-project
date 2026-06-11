@@ -34,6 +34,7 @@ public class ApiRequest
     public virtual ICollection<ApiResponse> Responses { get; set; }
     public virtual ICollection<RequestTagMap> TagLinks { get; set; }
     public virtual ICollection<RequestEnvironmentLink> EnvironmentLinks { get; set; }
+    public virtual ICollection<RequestAttachment> Attachments { get; set; }
 
     public ApiRequest()
     {
@@ -44,5 +45,6 @@ public class ApiRequest
         Responses = new HashSet<ApiResponse>();
         TagLinks = new HashSet<RequestTagMap>();
         EnvironmentLinks = new HashSet<RequestEnvironmentLink>();
+        Attachments = new HashSet<RequestAttachment>();
     }
 }

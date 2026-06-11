@@ -12,9 +12,10 @@
         : new List<ApiHeader> { new ApiHeader { IsEnabled = true } };
 }
 
-<form id="requestBuilderForm" class="request-builder-form" asp-area="" asp-controller="RequestBuilder" asp-action="Save" method="post">
+<form id="requestBuilderForm" class="request-builder-form" asp-area="" asp-controller="RequestBuilder" asp-action="Save" method="post" data-ajax-validation="true">
     @Html.AntiForgeryToken()
     <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <section class="runner-request-head" aria-label="HTTP request setup">
         <label class="runner-field" for="requestName">
@@ -89,6 +90,10 @@
 
             <div class="builder-request-actions">
                 <button type="submit" class="runner-send-btn">Save Request</button>
+                @if (Model.Id > 0)
+                {
+                    <button type="submit" class="runner-send-btn runner-run-btn" formaction="/request-builder/run/@Model.Id" formmethod="post">Run Request</button>
+                }
                 <button type="button" class="builder-secondary-btn" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -102,18 +107,22 @@
 
     <section class="runner-editor-panel" aria-label="Request editors">
         <div class="runner-tab-strip">
-            <button type="button" class="runner-tab active">Headers</button>
-            <button type="button" class="runner-tab">Body</button>
-            <button type="button" class="runner-tab">Auth</button>
-            <button type="button" class="runner-tab">Tests</button>
+            <button type="button" class="runner-tab active" data-runner-tab="headers">Headers</button>
+            <button type="button" class="runner-tab" data-runner-tab="body">Body</button>
+            <button type="button" class="runner-tab" data-runner-tab="auth">Auth</button>
+            <button type="button" class="runner-tab" data-runner-tab="tests">Tests</button>
         </div>
 
         <div class="runner-editors">
-            <article class="editor-card">
+            <article class="editor-card runner-tab-pane active" data-runner-pane="headers">
                 <header>
                     <h2>Headers</h2>
                     <span>@headers.Count(h => h.IsEnabled) active</span>
                 </header>
+                <div class="nested-search header-search">
+                    <label for="headerSearch">Search Headers</label>
+                    <input id="headerSearch" class="nested-filter-input" type="text" data-filter-target="#headerEditorList" data-filter-row=".header-editor-row" placeholder="Search key or value" />
+                </div>
                 <div class="header-editor-list" id="headerEditorList">
                     @for (var i = 0; i < headers.Count; i++)
                     {
@@ -134,18 +143,56 @@
                 <button type="button" class="btn app-btn app-btn-muted add-header-row" data-next-index="@headers.Count">Add Header</button>
             </article>
 
-            <article class="editor-card body-card">
+            <article class="editor-card body-card runner-tab-pane" data-runner-pane="body">
                 <header>
                     <h2>Body (JSON)</h2>
                     <span>raw</span>
                 </header>
                 @{
-                    var defaultBody = string.IsNullOrWhiteSpace(Model.Body)
-                        ? "{\n  \"template\": \"payment-received\",\n  \"locale\": \"en-US\"\n}"
-                        : Model.Body;
+                    var defaultBody = Model.Body ?? string.Empty;
                 }
                 <textarea asp-for="Body" rows="14" spellcheck="false" class="form-control">@Html.Raw(defaultBody)</textarea>
             </article>
+
+            <article class="editor-card runner-tab-pane" data-runner-pane="auth">
+                <header>
+                    <h2>Auth</h2>
+                    <span>headers</span>
+                </header>
+                <div class="empty-editor-pane">
+                    Add auth values as request headers, for example <strong>Authorization</strong>.
+                </div>
+            </article>
+
+            <article class="editor-card runner-tab-pane" data-runner-pane="tests">
+                <header>
+                    <h2>Tests</h2>
+                    <span>notes</span>
+                </header>
+                <div class="empty-editor-pane">
+                    Response history is available after running the request.
+                </div>
+            </article>
         </div>
     </section>
+
+    @if (Model.Id > 0)
+    {
+        <section class="request-attachments-panel" data-request-id="@Model.Id" aria-label="Request attachments">
+            <header>
+                <div>
+                    <p class="attachments-kicker">Attachments</p>
+                    <h2>Request Files</h2>
+                </div>
+                <label class="btn app-btn app-btn-muted attachment-upload-label" for="requestAttachmentInput">
+                    Upload
+                    <input id="requestAttachmentInput" type="file" multiple data-request-id="@Model.Id" />
+                </label>
+            </header>
+            <div class="request-attachment-status" aria-live="polite"></div>
+            <div class="request-attachment-list" id="requestAttachmentList">
+                <p class="text-muted">Loading attachments...</p>
+            </div>
+        </section>
+    }
 </form>

@@ -9,8 +9,15 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient<ApiRequestExecutor>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(60);
+});
 
 var connectionString = builder.Configuration.GetConnectionString("ApiTesterDb")
     ?? throw new InvalidOperationException("Connection string 'ApiTesterDb' was not found.");
@@ -34,12 +41,26 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     .AddDefaultTokenProviders()
     .AddDefaultUI();
 
+var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
+var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+if (!string.IsNullOrWhiteSpace(googleClientId) && !string.IsNullOrWhiteSpace(googleClientSecret))
+{
+    builder.Services.AddAuthentication()
+        .AddGoogle(options =>
+        {
+            options.ClientId = googleClientId;
+            options.ClientSecret = googleClientSecret;
+        });
+}
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
     options.LogoutPath = "/Identity/Account/Logout";
     options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+        ? Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest
+        : Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
     options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.SlidingExpiration = true;
 });
@@ -62,25 +83,28 @@ using (var scope = app.Services.CreateScope())
         // The database was adjusted manually during development to ensure Identity Id columns are
         // AUTO_INCREMENT. Remove any runtime SQL fixes and track schema changes with migrations.
 
-        var adminRole = "Admin";
-        if (!await roleManager.RoleExistsAsync(adminRole))
+        var roles = new[] { "Admin", "Manager" };
+        foreach (var roleName in roles)
         {
-            int nextRoleId = 1;
-            try
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
-                if (await roleManager.Roles.AnyAsync())
+                int nextRoleId = 1;
+                try
                 {
-                    nextRoleId = await roleManager.Roles.MaxAsync(r => r.Id) + 1;
+                    if (await roleManager.Roles.AnyAsync())
+                    {
+                        nextRoleId = await roleManager.Roles.MaxAsync(r => r.Id) + 1;
+                    }
                 }
-            }
-            catch
-            {
-                // If querying fails, fall back to 1
-                nextRoleId = 1;
-            }
+                catch
+                {
+                    // If querying fails, fall back to 1
+                    nextRoleId = 1;
+                }
 
-            var role = new IdentityRole<int> { Id = nextRoleId, Name = adminRole, NormalizedName = adminRole.ToUpperInvariant() };
-            await roleManager.CreateAsync(role);
+                var role = new IdentityRole<int> { Id = nextRoleId, Name = roleName, NormalizedName = roleName.ToUpperInvariant() };
+                await roleManager.CreateAsync(role);
+            }
         }
 
         var adminEmail = builder.Configuration["SeedAdminEmail"] ?? "admin@local";
@@ -96,14 +120,20 @@ using (var scope = app.Services.CreateScope())
                 EmailConfirmed = true,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                Role = "Admin"
+                Role = "Admin",
+                OIB = "00000000000",
+                JMBG = "0000000000000"
             };
 
             var createResult = await userManager.CreateAsync(admin, adminPassword);
             if (createResult.Succeeded)
             {
-                await userManager.AddToRoleAsync(admin, adminRole);
+                await userManager.AddToRoleAsync(admin, "Admin");
             }
+        }
+        else if (!await userManager.IsInRoleAsync(admin, "Admin"))
+        {
+            await userManager.AddToRoleAsync(admin, "Admin");
         }
     }
     catch
@@ -148,3 +178,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 await app.RunAsync();
+
+public partial class Program { }

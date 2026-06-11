@@ -7,7 +7,6 @@
     var heroTitle = ViewData["HeroTitle"] as string ?? string.Empty;
     var heroDescription = ViewData["HeroDescription"] as string ?? string.Empty;
     var newCollectionActionText = ViewData["NewCollectionActionText"] as string ?? string.Empty;
-    var importCollectionActionText = ViewData["ImportCollectionActionText"] as string ?? string.Empty;
     var searchPlaceholder = ViewData["SearchPlaceholder"] as string ?? string.Empty;
     var filters = ViewData["Filters"] as List<string> ?? new List<string>();
     var workspaces = ViewBag.Workspaces as IEnumerable<API_tester.Models.ApiWorkspace> ?? Enumerable.Empty<API_tester.Models.ApiWorkspace>();
@@ -29,7 +28,6 @@
     </div>
     <div class="collections-hero-actions">
         <button type="button" class="btn app-btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#collectionCreateModal">@newCollectionActionText</button>
-        <a class="btn app-btn app-btn-muted" asp-area="" asp-controller="Request" asp-action="Index">@importCollectionActionText</a>
     </div>
 </section>
 
@@ -58,7 +56,7 @@
     <div class="collection-filter-group">
         @foreach (var filter in filters.Select((value, index) => new { value, index }))
         {
-            <button class="filter-chip @(filter.index == 0 ? "active" : string.Empty)" type="button">@filter.value</button>
+            <button class="filter-chip @(filter.index == 0 ? "active" : string.Empty)" type="button" data-collection-filter="@filter.value.ToLowerInvariant()">@filter.value</button>
         }
     </div>
 </section>
@@ -66,7 +64,7 @@
 <section class="collections-grid" aria-label="Collections list">
     @foreach (var collection in Model)
     {
-        <article class="collection-card">
+        <article class="collection-card" data-shared="@collection.IsShared.ToString().ToLowerInvariant()">
             <div class="collection-head">
                 <h2>@collection.Name</h2>
                 <span class="collection-badge">@(collection.IsShared ? "Shared" : "Private")</span>
@@ -122,7 +120,7 @@
             $('.open-collection-edit').on('click', function (e) {
                 e.preventDefault();
                 var id = $(this).data('collection-id');
-                var url = '/Collection/edit/' + id;
+                var url = '/collections/edit/' + id;
                 $.get(url, function (html) {
                     if (window.injectModalHtml) window.injectModalHtml('#collectionEditModal .modal-body', html);
                     else { $('#collectionEditModal .modal-body').html(html); var modalEl = document.getElementById('collectionEditModal'); if (modalEl && window.bootstrap) { var modal = new bootstrap.Modal(modalEl); modal.show(); } }

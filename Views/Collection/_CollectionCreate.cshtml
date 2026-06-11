@@ -1,6 +1,6 @@
 @model API_tester.Models.ApiCollection
 
-<form id="collectionCreateForm" asp-controller="Collection" asp-action="Create" method="post">
+<form id="collectionCreateForm" asp-controller="Collection" asp-action="Create" method="post" data-ajax-validation="true">
     @Html.AntiForgeryToken()
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
