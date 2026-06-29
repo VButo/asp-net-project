@@ -83,7 +83,7 @@ public class RequestDraftService
 
         return new AiRequestDraft(
             root.TryGetProperty("name", out var name) ? name.GetString() ?? "AI request" : "AI request",
-            method,
+            ToMethodValue(method),
             root.TryGetProperty("url", out var url) ? url.GetString() ?? string.Empty : string.Empty,
             headers,
             root.TryGetProperty("body", out var body) ? body.GetString() ?? string.Empty : string.Empty,
@@ -93,8 +93,12 @@ public class RequestDraftService
     private static AiRequestDraft CreateLocalDraft(string prompt, string message)
     {
         var normalized = prompt.Trim();
-        var method = Enum.GetValues<HttpMethodType>()
+        var supportedMethods = Enum.GetValues<HttpMethodType>();
+        var explicitMethod = supportedMethods
             .FirstOrDefault(candidate => normalized.Contains(candidate.ToString(), StringComparison.OrdinalIgnoreCase));
+        var hasExplicitMethod = supportedMethods.Any(candidate =>
+            normalized.Contains(candidate.ToString(), StringComparison.OrdinalIgnoreCase));
+        var method = hasExplicitMethod ? explicitMethod : HttpMethodType.Get;
 
         var urlMatch = System.Text.RegularExpressions.Regex.Match(normalized, @"https?://[^\s""']+");
         var url = urlMatch.Success
@@ -103,7 +107,9 @@ public class RequestDraftService
                 ? "https://jsonplaceholder.typicode.com/users"
                 : "https://api.example.com/resource";
 
-        if (normalized.Contains("create", StringComparison.OrdinalIgnoreCase) && method == HttpMethodType.Get)
+        if (!hasExplicitMethod
+            && normalized.Contains("create", StringComparison.OrdinalIgnoreCase)
+            && method == HttpMethodType.Get)
         {
             method = HttpMethodType.Post;
         }
@@ -114,9 +120,12 @@ public class RequestDraftService
             : new Dictionary<string, string>();
 
         var name = normalized.Length <= 80 ? normalized : normalized[..77] + "...";
-        return new AiRequestDraft(name, method, url, headers, body, "local", message);
+        return new AiRequestDraft(name, ToMethodValue(method), url, headers, body, "local", message);
     }
 
     private static HttpMethodType ParseMethod(string? value) =>
         Enum.TryParse<HttpMethodType>(value, true, out var method) ? method : HttpMethodType.Get;
+
+    private static string ToMethodValue(HttpMethodType method) =>
+        method.ToString().ToUpperInvariant();
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using API_tester.Models;
 using Xunit;
 
@@ -20,7 +21,29 @@ public class AiAndSearchTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(draft);
         Assert.Equal("local", draft!.Source);
+        Assert.Equal("GET", draft.Method);
         Assert.Equal("https://jsonplaceholder.typicode.com/users", draft.Url);
+    }
+
+    [Theory]
+    [InlineData("GET")]
+    [InlineData("POST")]
+    [InlineData("PUT")]
+    [InlineData("PATCH")]
+    [InlineData("DELETE")]
+    public async Task AiDraft_SerializesMethodAsDropdownValue(string method)
+    {
+        using var factory = Lab5ApiFactory.CreateWithRoles("Manager");
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync(
+            "/api/ai/request-draft",
+            new AiRequestDraftInput($"Use {method} for https://example.com/items"));
+        var json = await response.Content.ReadAsStringAsync();
+        using var document = JsonDocument.Parse(json);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(method, document.RootElement.GetProperty("method").GetString());
     }
 
     [Fact]

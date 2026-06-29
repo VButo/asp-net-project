@@ -1,10 +1,8 @@
-using API_tester.Models.Enums;
-
 namespace API_tester.Models;
 
 public record AiRequestDraft(
     string Name,
-    HttpMethodType Method,
+    string Method,
     string Url,
     IReadOnlyDictionary<string, string> Headers,
     string Body,
