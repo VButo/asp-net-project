@@ -40,7 +40,6 @@ public class EnvironmentController : Controller
 
     [HttpGet("environments")]
     [HttpGet("environments/{workspaceId:int}")]
-    [AllowAnonymous]
     public async Task<IActionResult> Index(int? workspaceId)
     {
         if (!ModelState.IsValid)
@@ -84,7 +83,6 @@ public class EnvironmentController : Controller
     }
 
     [HttpGet("environments/search")]
-    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();

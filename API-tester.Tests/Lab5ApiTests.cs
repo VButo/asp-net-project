@@ -235,21 +235,24 @@ public class Lab5ApiTests : IClassFixture<Lab5ApiFactory>
 public class Lab5ApiFactory : WebApplicationFactory<Program>
 {
     private readonly bool _authenticated;
+    private readonly bool _useTestAuthentication;
     private readonly string[] _roles;
     private readonly string _databaseName = $"api_tester_tests_{Guid.NewGuid():N}";
     private readonly string _webRoot = Path.Combine(Path.GetTempPath(), "api-tester-tests", Guid.NewGuid().ToString("N"), "wwwroot");
 
     public Lab5ApiFactory()
-        : this(true, new[] { "Admin", "Manager" })
+        : this(true, true, new[] { "Admin", "Manager" })
     {
     }
 
-    public static Lab5ApiFactory CreateUnauthenticated() => new(false, Array.Empty<string>());
-    public static Lab5ApiFactory CreateWithRoles(params string[] roles) => new(true, roles);
+    public static Lab5ApiFactory CreateUnauthenticated() => new(false, true, Array.Empty<string>());
+    public static Lab5ApiFactory CreateWithApplicationAuthentication() => new(false, false, Array.Empty<string>());
+    public static Lab5ApiFactory CreateWithRoles(params string[] roles) => new(true, true, roles);
 
-    private Lab5ApiFactory(bool authenticated, params string[] roles)
+    private Lab5ApiFactory(bool authenticated, bool useTestAuthentication, params string[] roles)
     {
         _authenticated = authenticated;
+        _useTestAuthentication = useTestAuthentication;
         _roles = roles;
     }
 
@@ -269,7 +272,9 @@ public class Lab5ApiFactory : WebApplicationFactory<Program>
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase(_databaseName));
 
-            services.AddAuthentication(options =>
+            if (_useTestAuthentication)
+            {
+                services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = TestAuthHandler.AuthScheme;
                     options.DefaultChallengeScheme = TestAuthHandler.AuthScheme;
@@ -280,6 +285,7 @@ public class Lab5ApiFactory : WebApplicationFactory<Program>
                     options.Authenticated = _authenticated;
                     options.Roles = _roles;
                 });
+            }
 
             using var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();

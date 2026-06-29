@@ -1,0 +1,23 @@
+{
+  "servers": {
+    "apiTester": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/mcp/api_tester_mcp.py"
+      ],
+      "env": {
+        "API_TESTER_URL": "http://localhost:5000",
+        "API_TESTER_COOKIE": "${input:api-tester-cookie}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "api-tester-cookie",
+      "type": "promptString",
+      "description": "API Tester Identity cookie value, including the cookie name",
+      "password": true
+    }
+  ]
+}

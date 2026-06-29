@@ -19,7 +19,6 @@ public class EnvironmentVariablesApiController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<EnvironmentVariableDto>>> GetAll([FromQuery] string? q, [FromQuery] int? environmentId)
     {
         var query = _context.EnvironmentVariables.AsQueryable();

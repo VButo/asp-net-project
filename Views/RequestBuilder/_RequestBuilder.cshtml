@@ -17,6 +17,15 @@
     <input asp-for="Id" type="hidden" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+    <section class="ai-request-draft" aria-label="AI request draft">
+        <label for="aiRequestPrompt">
+            <span>AI Request Draft</span>
+            <textarea id="aiRequestPrompt" rows="2" maxlength="2000" placeholder="Create a GET request to fetch users from JSONPlaceholder"></textarea>
+        </label>
+        <button type="button" class="btn app-btn app-btn-muted" id="generateRequestDraft">Generate</button>
+        <p id="aiRequestStatus" role="status" aria-live="polite"></p>
+    </section>
+
     <section class="runner-request-head" aria-label="HTTP request setup">
         <label class="runner-field" for="requestName">
             <span>Request Name</span>

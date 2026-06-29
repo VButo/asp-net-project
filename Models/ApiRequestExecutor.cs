@@ -8,15 +8,19 @@ namespace API_tester.Models;
 public class ApiRequestExecutor
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<ApiRequestExecutor> _logger;
 
-    public ApiRequestExecutor(HttpClient httpClient)
+    public ApiRequestExecutor(HttpClient httpClient, ILogger<ApiRequestExecutor> logger)
     {
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public async Task<ApiResponse> ExecuteRequestAsync(ApiRequest request)
     {
         var stopwatch = Stopwatch.StartNew();
+        _logger.LogInformation("Sending saved request {RequestId} with method {Method} to host {Host}",
+            request.Id, request.Method, GetSafeHost(request.Url));
         try
         {
             using var message = new HttpRequestMessage(ToHttpMethod(request.Method), request.Url);
@@ -54,12 +58,15 @@ public class ApiRequestExecutor
             using var httpResponse = await _httpClient.SendAsync(message);
             var responseBody = await httpResponse.Content.ReadAsStringAsync();
             stopwatch.Stop();
+            _logger.LogInformation("Saved request {RequestId} completed with status {StatusCode} in {ElapsedMs} ms",
+                request.Id, (int)httpResponse.StatusCode, stopwatch.ElapsedMilliseconds);
 
             return BuildResponse(request, (int)httpResponse.StatusCode, httpResponse.IsSuccessStatusCode, stopwatch.ElapsedMilliseconds, responseBody);
         }
         catch (Exception ex)
         {
             stopwatch.Stop();
+            _logger.LogWarning(ex, "Saved request {RequestId} failed after {ElapsedMs} ms", request.Id, stopwatch.ElapsedMilliseconds);
             return BuildResponse(request, 0, false, stopwatch.ElapsedMilliseconds, $"{{\"error\":\"{EscapeJson(ex.Message)}\"}}");
         }
     }
@@ -102,4 +109,7 @@ public class ApiRequestExecutor
 
     private static string EscapeJson(string value) =>
         value.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+    private static string GetSafeHost(string url) =>
+        Uri.TryCreate(url, UriKind.Absolute, out var uri) ? uri.Host : "invalid-url";
 }

@@ -156,8 +156,92 @@ a {
 }
 
 .app-menu-toggle {
+  display: none;
   border-color: #214059;
-  border-radius: 10px;
+  border-radius: 8px;
+  width: 42px;
+  height: 42px;
+  color: var(--text-main);
+  background: var(--bg-panel-soft);
+}
+
+.global-search-form input,
+.search-page-form input,
+.ai-request-draft textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-panel-soft);
+  color: var(--text-main);
+  padding: 0.58rem 0.72rem;
+}
+
+.global-search-form {
+  width: min(210px, 24vw);
+}
+
+.search-page-form {
+  width: min(520px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: end;
+}
+
+.search-page-form label {
+  grid-column: 1 / -1;
+}
+
+.global-search-results {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.global-search-result {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 0.2rem 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.global-search-result span {
+  grid-row: 1 / 3;
+  color: var(--cyan);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.global-search-result small {
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.ai-request-draft {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: end;
+  padding: 0.75rem;
+  border: 1px solid #31526a;
+  border-radius: 8px;
+  background: rgba(11, 24, 34, 0.72);
+}
+
+.ai-request-draft label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.ai-request-draft p {
+  grid-column: 1 / -1;
+  min-height: 1.25rem;
+  margin: 0;
+  color: var(--text-muted);
 }
 
 .app-shell {
@@ -2577,6 +2661,7 @@ a {
   }
 
   .app-menu {
+    display: none;
     margin-top: 0.6rem;
     gap: 0.7rem;
     padding-top: 0.6rem;
@@ -2657,6 +2742,23 @@ a {
     align-items: stretch;
   }
 
+  .app-menu.open {
+    display: flex;
+  }
+
+  .app-nav {
+    flex-wrap: wrap;
+  }
+
+  .app-menu-toggle {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .global-search-form {
+    width: 100%;
+  }
+
   .header-editor-row {
     grid-template-columns: 1fr;
   }
@@ -2695,6 +2797,16 @@ a {
 
   .app-brand-text {
     font-size: 0.95rem;
+  }
+
+  .search-page-form,
+  .ai-request-draft,
+  .global-search-result {
+    grid-template-columns: 1fr;
+  }
+
+  .global-search-result span {
+    grid-row: auto;
   }
 }
 

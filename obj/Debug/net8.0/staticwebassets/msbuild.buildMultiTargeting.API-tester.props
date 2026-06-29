@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\API-tester.props" />
-</Project>

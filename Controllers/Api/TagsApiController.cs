@@ -19,7 +19,6 @@ public class TagsApiController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<TagDto>>> GetAll([FromQuery] string? q)
     {
         var query = _context.RequestTags.AsQueryable();

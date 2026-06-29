@@ -17,7 +17,6 @@ public class WorkspacesController : Controller
     }
 
     [HttpGet("workspaces")]
-    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var workspaces = await _context.Workspaces
@@ -39,7 +38,6 @@ public class WorkspacesController : Controller
     }
 
     [HttpGet("workspaces/search")]
-    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();
@@ -78,7 +76,14 @@ public class WorkspacesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(workspace);
+
+        if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+        {
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            return PartialView("_WorkspaceCreate", workspace);
+        }
+
+        return BadRequest(ModelState);
     }
 
     [HttpGet("workspaces/edit/{id:int}")]

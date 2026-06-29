@@ -59,7 +59,7 @@ public class LoginModel : PageModel
         if (result.Succeeded)
         {
             _logger.LogInformation("User logged in.");
-            return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            return LocalRedirect("/dashboard");
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");

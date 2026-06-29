@@ -1,0 +1,74 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Pp]ublish/
+artifacts/
+
+# Visual Studio and IDE state
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+appsettings.*.Local.json
+secrets.json
+
+# Logs and runtime files
+logs/
+*.log
+*.pid
+
+# Uploaded files and local data
+wwwroot/uploads/
+*.db
+*.db-shm
+*.db-wal
+
+# Tests and coverage
+TestResults/
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+playwright-report/
+test-results/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Frontend dependencies
+node_modules/
+
+# Generated and temporary files
+*.tmp
+*.temp
+*.cache
+~$*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+[Bb]in/
+[Oo]bj/
+**/[Bb]in/
+**/[Oo]bj/
+.vs/
+*.user
+*.suo

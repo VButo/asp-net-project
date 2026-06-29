@@ -26,6 +26,64 @@ $(function () {
 	});
 });
 
+$(function () {
+	$(document).on('click', '.app-menu-toggle', function () {
+		var $button = $(this);
+		var $menu = $('#appMenu');
+		var open = !$menu.hasClass('open');
+		$menu.toggleClass('open', open);
+		$button.attr('aria-expanded', String(open));
+	});
+
+	$(document).on('click', '#generateRequestDraft', function () {
+		var $button = $(this);
+		var prompt = String($('#aiRequestPrompt').val() || '').trim();
+		var $status = $('#aiRequestStatus');
+		if (!prompt) {
+			$status.text('Describe the request you want to create.');
+			return;
+		}
+
+		$button.prop('disabled', true);
+		$status.text('Generating draft...');
+		$.ajax({
+			url: '/api/ai/request-draft',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({ prompt: prompt })
+		}).done(function (draft) {
+			$('#requestName').val(draft.name || draft.Name || '').trigger('input');
+			$('#requestMethod').val(draft.method !== undefined ? draft.method : draft.Method).trigger('change');
+			$('#requestUrl').val(draft.url || draft.Url || '').trigger('input');
+			$('#Body').val(draft.body || draft.Body || '').trigger('input');
+
+			var headers = draft.headers || draft.Headers || {};
+			var $list = $('#headerEditorList').empty();
+			var index = 0;
+			Object.keys(headers).forEach(function (key) {
+				var row = '<div class="header-editor-row">'
+					+ '<input type="hidden" name="Headers[' + index + '].RequestId" value="0" />'
+					+ '<input name="Headers[' + index + '].Key" class="form-control" maxlength="150" />'
+					+ '<input name="Headers[' + index + '].Value" class="form-control" maxlength="2000" />'
+					+ '<label class="form-check"><input name="Headers[' + index + '].IsEnabled" value="true" type="checkbox" class="form-check-input" checked />'
+					+ '<input name="Headers[' + index + '].IsEnabled" value="false" type="hidden" /><span>On</span></label>'
+					+ '<button type="button" class="btn app-btn app-btn-muted remove-header-row">Remove</button></div>';
+				var $row = $(row);
+				$row.find('input[name$=".Key"]').val(key);
+				$row.find('input[name$=".Value"]').val(headers[key]);
+				$list.append($row);
+				index++;
+			});
+			$('.add-header-row').attr('data-next-index', index);
+			$status.text(draft.message || draft.Message || 'Draft generated. Review it before saving or sending.');
+		}).fail(function (xhr) {
+			$status.text(xhr.responseText || 'The request draft could not be generated.');
+		}).always(function () {
+			$button.prop('disabled', false);
+		});
+	});
+});
+
 // Debounced AJAX list search for collections, workspaces and environments with fade animation
 (function () {
 	var timers = {};

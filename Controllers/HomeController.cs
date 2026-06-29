@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_tester.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -19,8 +20,15 @@ public class HomeController : Controller
     }
 
     [HttpGet("")]
-    [HttpGet("home")]
-    [Authorize]
+    [AllowAnonymous]
+    public IActionResult Root()
+    {
+        return User.Identity?.IsAuthenticated == true
+            ? RedirectToAction(nameof(Index))
+            : Redirect("/login");
+    }
+
+    [HttpGet("dashboard")]
     public async Task<IActionResult> Index()
     {
         var weekAgo = DateTime.UtcNow.AddDays(-7);

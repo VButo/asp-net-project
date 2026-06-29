@@ -69,7 +69,7 @@ public class ExternalLoginModel : PageModel
         var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
         if (signInResult.Succeeded)
         {
-            return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            return LocalRedirect("/dashboard");
         }
 
         Input.Email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
@@ -111,7 +111,7 @@ public class ExternalLoginModel : PageModel
             {
                 _logger.LogInformation("User created an account using {Provider}.", info.LoginProvider);
                 await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                return LocalRedirect(returnUrl ?? Url.Content("~/"));
+                return LocalRedirect("/dashboard");
             }
         }
 

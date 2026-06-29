@@ -19,7 +19,6 @@ public class RequestsApiController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<RequestDto>>> GetAll([FromQuery] string? q)
     {
         var query = IncludeRequestGraph(_context.Requests);

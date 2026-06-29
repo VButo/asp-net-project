@@ -1,0 +1,9 @@
+.git
+.vs
+bin
+obj
+API-tester.Tests/bin
+API-tester.Tests/obj
+*.user
+*.suo
+wwwroot/uploads

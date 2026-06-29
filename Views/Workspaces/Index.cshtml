@@ -34,21 +34,28 @@
 </section>
 
 <section class="workspaces-grid" aria-label="Workspace list">
-    @foreach (var workspace in Model)
+    @if (Model.Count == 0)
     {
-        <article class="workspace-card">
-            <div class="workspace-head">
-                <h2>@workspace.Name</h2>
-            </div>
-            <p class="workspace-description">@workspace.Description</p>
-            <div class="workspace-metrics">
-                <p><span>Collections</span><strong>@workspace.Collections.Count</strong></p>
-                <p><span>Environments</span><strong>@workspace.Environments.Count</strong></p>
-            </div>
-            <a href="#" class="entity-link open-workspace-details" data-workspace-id="@workspace.Id">Open Workspace Details</a>
-            <a href="#" class="entity-link open-workspace-edit" data-workspace-id="@workspace.Id">Edit</a>
-            <a href="#" class="entity-link open-workspace-delete" data-workspace-id="@workspace.Id">Delete</a>
-        </article>
+        <div class="empty-editor-pane">No workspaces yet. Create one to organize collections and environments.</div>
+    }
+    else
+    {
+        @foreach (var workspace in Model)
+        {
+            <article class="workspace-card">
+                <div class="workspace-head">
+                    <h2>@workspace.Name</h2>
+                </div>
+                <p class="workspace-description">@workspace.Description</p>
+                <div class="workspace-metrics">
+                    <p><span>Collections</span><strong>@workspace.Collections.Count</strong></p>
+                    <p><span>Environments</span><strong>@workspace.Environments.Count</strong></p>
+                </div>
+                <a href="#" class="entity-link open-workspace-details" data-workspace-id="@workspace.Id">Open Workspace Details</a>
+                <a href="#" class="entity-link open-workspace-edit" data-workspace-id="@workspace.Id">Edit</a>
+                <a href="#" class="entity-link open-workspace-delete" data-workspace-id="@workspace.Id">Delete</a>
+            </article>
+        }
     }
 </section>
 

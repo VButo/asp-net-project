@@ -1,6 +1,6 @@
 @model API_tester.Models.ApiWorkspace
 
-<form asp-area="" asp-controller="Workspaces" asp-action="Create" method="post" class="workspace-create-form collection-modal-form">
+<form asp-area="" asp-controller="Workspaces" asp-action="Create" method="post" class="workspace-create-form collection-modal-form" data-ajax-validation="true">
     @Html.AntiForgeryToken()
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

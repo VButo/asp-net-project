@@ -1,8 +1,11 @@
 using API_tester.Data;
 using API_tester.Models;
+using API_tester.Middleware;
+using API_tester.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Authorization;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Globalization;
@@ -13,10 +16,26 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 });
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeAreaFolder("Identity", "/");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Register");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ExternalLogin");
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 builder.Services.AddHttpClient<ApiRequestExecutor>(client =>
 {
     client.Timeout = TimeSpan.FromSeconds(60);
+});
+builder.Services.AddHttpClient<RequestDraftService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
 });
 
 var connectionString = builder.Configuration.GetConnectionString("ApiTesterDb")
@@ -55,8 +74,8 @@ if (!string.IsNullOrWhiteSpace(googleClientId) && !string.IsNullOrWhiteSpace(goo
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Identity/Account/Login";
-    options.LogoutPath = "/Identity/Account/Logout";
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout";
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
         ? Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest
@@ -66,6 +85,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+app.Logger.LogInformation("API Tester starting in {Environment}", app.Environment.EnvironmentName);
 
 using (var scope = app.Services.CreateScope())
 {
@@ -164,6 +184,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     SupportedUICultures = supportedCultures
 });
 
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseRouting();
 
 app.UseAuthentication();

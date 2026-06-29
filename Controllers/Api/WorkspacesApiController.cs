@@ -19,7 +19,6 @@ public class WorkspacesApiController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<WorkspaceDto>>> GetAll([FromQuery] string? q)
     {
         var query = _context.Workspaces.Include(w => w.Collections).Include(w => w.Environments).AsQueryable();

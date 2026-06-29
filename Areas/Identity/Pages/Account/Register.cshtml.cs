@@ -83,7 +83,7 @@ public class RegisterModel : PageModel
         {
             _logger.LogInformation("User created a new account with password.");
             await _signInManager.SignInAsync(user, isPersistent: false);
-            return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            return LocalRedirect("/dashboard");
         }
 
         foreach (var error in result.Errors)

@@ -29,7 +29,6 @@ public class TagsController : Controller
     }
 
     [HttpGet("tags")]
-    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var tags = await _context.RequestTags
@@ -42,7 +41,6 @@ public class TagsController : Controller
     }
 
     [HttpGet("tags/search")]
-    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();

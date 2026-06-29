@@ -1,0 +1,53 @@
+@model IReadOnlyList<API_tester.Models.GlobalSearchResult>
+
+@{
+    ViewData["Title"] = "Search";
+    var query = ViewData["Query"] as string ?? string.Empty;
+}
+
+<nav class="page-crumbs" aria-label="Breadcrumb">
+    <a asp-controller="Home" asp-action="Index">Dashboard</a>
+    <span>/</span>
+    <strong>Search</strong>
+</nav>
+
+<section class="details-hero">
+    <div>
+        <p class="details-kicker">Global Search</p>
+        <h1>Find anything</h1>
+        <p>Workspaces, collections, requests, methods, URLs, environments, and tags.</p>
+    </div>
+    <form class="search-page-form" action="/search" method="get" role="search">
+        <label for="searchPageQuery">Search</label>
+        <input id="searchPageQuery" name="q" value="@query" type="search" autofocus placeholder="Name, URL, method, tag..." />
+        <button class="btn app-btn app-btn-primary" type="submit">Search</button>
+    </form>
+</section>
+
+<section class="dashboard-panel search-results-panel" aria-live="polite">
+    @if (string.IsNullOrWhiteSpace(query))
+    {
+        <div class="empty-editor-pane">Enter a term to search across the application.</div>
+    }
+    else if (Model.Count == 0)
+    {
+        <div class="empty-editor-pane">No results found for <strong>@query</strong>.</div>
+    }
+    else
+    {
+        <div class="panel-title-row">
+            <h3>Results</h3>
+            <span>@Model.Count matches</span>
+        </div>
+        <div class="global-search-results">
+            @foreach (var result in Model)
+            {
+                <a class="global-search-result" href="@result.Url">
+                    <span>@result.Type</span>
+                    <strong>@result.Title</strong>
+                    <small>@result.Description</small>
+                </a>
+            }
+        </div>
+    }
+</section>

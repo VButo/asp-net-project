@@ -20,7 +20,6 @@ public class RequestHeadersApiController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<HeaderDto>>> GetAll([FromQuery] string? q, [FromQuery] int? requestId)
     {
         var query = _context.Headers.AsQueryable();

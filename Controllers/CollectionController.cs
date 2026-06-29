@@ -32,7 +32,6 @@ public class CollectionController : Controller
     }
 
     [HttpGet("collections")]
-    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var collections = await _context.Collections
@@ -91,7 +90,6 @@ public class CollectionController : Controller
     }
 
     [HttpGet("collections/search")]
-    [AllowAnonymous]
     public async Task<IActionResult> Search([FromQuery(Name = "q")] string? q)
     {
         var term = (q ?? string.Empty).Trim();
